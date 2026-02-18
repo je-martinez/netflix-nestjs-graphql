@@ -5,6 +5,9 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20.18.3"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -22,6 +25,9 @@
   "dependencies": {
     "@apollo/server": "^5.4.0",
     "@as-integrations/fastify": "^3.1.0",
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/csrf-protection": "^7.1.0",
+    "@fastify/helmet": "^13.0.2",
     "@nestjs/apollo": "^13.2.4",
     "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.0.1",
@@ -30,6 +36,7 @@
     "@nestjs/graphql": "^13.2.4",
     "@nestjs/platform-fastify": "^11.1.14",
     "@nestjs/terminus": "^11.1.0",
+    "@nestjs/throttler": "^6.5.0",
     "@prisma/client": "^6.19.2",
     "@prisma/extension-read-replicas": "^0.5.0",
     "axios": "^1.13.5",
