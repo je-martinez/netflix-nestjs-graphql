@@ -1,0 +1,60 @@
+version: '3.9'
+
+services:
+  roach1:
+    image: cockroachdb/cockroach:latest-v23.1
+    container_name: roach1
+    hostname: roach1
+    ports:
+      - "26257:26257"
+      - "8080:8080"
+    command: start --insecure --join=roach1,roach2,roach3
+    volumes:
+      - roach1-data:/cockroach/cockroach-data
+
+  roach2:
+    image: cockroachdb/cockroach:latest-v23.1
+    container_name: roach2
+    hostname: roach2
+    command: start --insecure --join=roach1,roach2,roach3
+    volumes:
+      - roach2-data:/cockroach/cockroach-data
+
+  roach3:
+    image: cockroachdb/cockroach:latest-v23.1
+    container_name: roach3
+    hostname: roach3
+    command: start --insecure --join=roach1,roach2,roach3
+    volumes:
+      - roach3-data:/cockroach/cockroach-data
+
+  roach-init:
+    image: cockroachdb/cockroach:latest-v23.1
+    container_name: roach-init
+    hostname: roach-init
+    volumes:
+      - ./database/seed/netflixdb-postgres.sql:/seed/netflixdb.sql
+    depends_on:
+      - roach1
+      - roach2
+      - roach3
+    entrypoint: 
+      - "/bin/bash"
+    command: >
+      -c "
+      echo 'Waiting for servers to be up...';
+      sleep 10;
+      /cockroach/cockroach init --insecure --host=roach1;
+      echo 'Cluster initialized.';
+      sleep 5;
+      echo 'Creating database...';
+      /cockroach/cockroach sql --insecure --host=roach1 --execute='CREATE DATABASE IF NOT EXISTS netflix;';
+      echo 'Seeding database...';
+      /cockroach/cockroach sql --insecure --host=roach1 --database=netflix --file=/seed/netflixdb.sql;
+      echo 'Database seeded.';
+      "
+
+volumes:
+  roach1-data:
+  roach2-data:
+  roach3-data:

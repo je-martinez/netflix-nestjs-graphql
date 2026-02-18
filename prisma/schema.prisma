@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model movie {
+  id                 BigInt         @id @default(sequence())
+  created_date       DateTime       @db.Timestamptz(6)
+  modified_date      DateTime       @db.Timestamptz(6)
+  available_globally Boolean?
+  locale             String?        @db.String(10)
+  original_title     String?        @db.String(255)
+  release_date       DateTime?      @db.Date
+  runtime            BigInt?
+  title              String         @db.String(255)
+  view_summary       view_summary[]
+
+  @@index([title, runtime], map: "idx_movie_title_runtime")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model season {
+  id             BigInt         @id @default(sequence())
+  created_date   DateTime       @db.Timestamptz(6)
+  modified_date  DateTime       @db.Timestamptz(6)
+  original_title String?        @db.String(255)
+  release_date   DateTime?      @db.Date
+  runtime        BigInt?
+  season_number  BigInt?
+  title          String         @db.String(255)
+  tv_show_id     BigInt?
+  tv_show        tv_show?       @relation(fields: [tv_show_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_season_tv_show_id")
+  view_summary   view_summary[]
+
+  @@index([tv_show_id], map: "idx_season_tv_show_id")
+  @@index([title, runtime], map: "idx_season_title_runtime")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model tv_show {
+  id                 BigInt    @id @default(sequence())
+  created_date       DateTime  @db.Timestamptz(6)
+  modified_date      DateTime  @db.Timestamptz(6)
+  available_globally Boolean?
+  locale             String?   @db.String(10)
+  original_title     String?   @db.String(255)
+  release_date       DateTime? @db.Date
+  title              String    @unique(map: "idx_tv_show_title") @db.String(255)
+  season             season[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model view_summary {
+  id                        BigInt   @id @default(sequence())
+  created_date              DateTime @db.Timestamptz(6)
+  modified_date             DateTime @db.Timestamptz(6)
+  cumulative_weeks_in_top10 BigInt?
+  duration                  String   @db.String(20)
+  end_date                  DateTime @db.Date
+  hours_viewed              BigInt
+  start_date                DateTime @db.Date
+  view_rank                 BigInt?
+  views                     BigInt?
+  movie_id                  BigInt?
+  season_id                 BigInt?
+  movie                     movie?   @relation(fields: [movie_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_view_summary_movie_id")
+  season                    season?  @relation(fields: [season_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_view_summary_season_id")
+}
