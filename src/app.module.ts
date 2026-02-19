@@ -7,6 +7,7 @@ import { join } from 'path';
 import { HelloResolver } from './hello.resolver';
 import { HealthModule } from './health/health.module';
 import { DatabaseModule } from './database/database.module';
+import { CatalogModule } from './catalog/catalog.module';
 import configuration from './config/configuration';
 import { validate } from './config/env.validation';
 
@@ -28,7 +29,9 @@ import { validate } from './config/env.validation';
       playground: true,
     }),
     HealthModule,
+    HealthModule,
     DatabaseModule,
+    CatalogModule,
   ],
   controllers: [],
   providers: [HelloResolver],

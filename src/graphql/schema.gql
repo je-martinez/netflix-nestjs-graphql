@@ -2,6 +2,68 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Movie {
+  availableGlobally: Boolean
+  createdDate: DateTime!
+  id: ID!
+  locale: String
+  modifiedDate: DateTime!
+  originalTitle: String
+  releaseDate: DateTime
+  runtime: Int
+  title: String!
+  viewSummaries: [ViewSummary!]
+}
+
 type Query {
   hello: String!
+  movie(id: ID!): Movie
+  movies(after: String, first: Float, title: String): [Movie!]!
+  tvShow(id: ID!): TvShow
+  tvShows(after: String, first: Float, title: String): [TvShow!]!
+}
+
+type Season {
+  createdDate: DateTime!
+  id: ID!
+  modifiedDate: DateTime!
+  originalTitle: String
+  releaseDate: DateTime
+  runtime: Int
+  seasonNumber: Int
+  title: String!
+  tvShowId: ID
+  viewSummaries: [ViewSummary!]
+}
+
+type TvShow {
+  availableGlobally: Boolean
+  createdDate: DateTime!
+  id: ID!
+  locale: String
+  modifiedDate: DateTime!
+  originalTitle: String
+  releaseDate: DateTime
+  seasons: [Season!]
+  title: String!
+}
+
+type ViewSummary {
+  createdDate: DateTime!
+  cumulativeWeeksInTop10: Float
+  duration: String!
+  endDate: DateTime!
+  hoursViewed: Int!
+  id: ID!
+  modifiedDate: DateTime!
+  movieId: ID
+  seasonId: ID
+  startDate: DateTime!
+  viewRank: Float
+  views: Float
 }
