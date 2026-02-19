@@ -24,6 +24,8 @@ type PaginatedMovie {
   hasNext: Boolean!
   hasPrevious: Boolean!
   nodes: [Movie]!
+  page: Int!
+  pageSize: Int!
   totalCount: Int!
 }
 
@@ -31,6 +33,8 @@ type PaginatedTvShow {
   hasNext: Boolean!
   hasPrevious: Boolean!
   nodes: [TvShow]!
+  page: Int!
+  pageSize: Int!
   totalCount: Int!
 }
 

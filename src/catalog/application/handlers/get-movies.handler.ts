@@ -43,6 +43,8 @@ export class GetMoviesHandler implements IQueryHandler<GetMoviesQuery> {
             hasNext,
             hasPrevious,
             totalCount,
+            page,
+            pageSize,
         };
     }
 }

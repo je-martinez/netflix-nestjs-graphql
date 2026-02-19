@@ -7,6 +7,8 @@ export interface IPaginatedType<T> {
     hasNext: boolean;
     hasPrevious: boolean;
     totalCount: number;
+    page: number;
+    pageSize: number;
 }
 
 export function PaginatedResponse<T>(classRef: Type<T>): Type<IPaginatedType<T>> {
@@ -23,6 +25,12 @@ export function PaginatedResponse<T>(classRef: Type<T>): Type<IPaginatedType<T>>
 
         @Field(() => Int)
         totalCount: number;
+
+        @Field(() => Int)
+        page: number;
+
+        @Field(() => Int)
+        pageSize: number;
     }
     return PaginatedType as Type<IPaginatedType<T>>;
 }

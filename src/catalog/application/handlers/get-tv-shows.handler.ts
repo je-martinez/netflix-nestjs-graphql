@@ -42,6 +42,8 @@ export class GetTvShowsHandler implements IQueryHandler<GetTvShowsQuery> {
             hasNext,
             hasPrevious,
             totalCount,
+            page,
+            pageSize,
         };
     }
 }
