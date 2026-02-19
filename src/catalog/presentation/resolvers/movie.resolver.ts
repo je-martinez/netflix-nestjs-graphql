@@ -1,4 +1,6 @@
 import { Resolver, Query, Args, ID, ResolveField, Parent } from '@nestjs/graphql';
+import { PaginationArgs } from '../../../common/pagination/pagination.args';
+import { PaginatedMovie } from '../dto/paginated-movie.response';
 import { QueryBus } from '@nestjs/cqrs';
 import { Movie } from '../../domain/entities/movie.entity';
 import { ViewSummary } from '../../domain/entities/view-summary.entity';
@@ -18,13 +20,12 @@ export class MovieResolver {
         return this.queryBus.execute(new GetMovieQuery(id));
     }
 
-    @Query(() => [Movie])
+    @Query(() => PaginatedMovie)
     async movies(
-        @Args('first', { nullable: true }) first?: number,
-        @Args('after', { nullable: true }) after?: string,
+        @Args() paginationArgs: PaginationArgs,
         @Args('title', { nullable: true }) title?: string,
-    ): Promise<Movie[]> {
-        return this.queryBus.execute(new GetMoviesQuery(first, after, title));
+    ): Promise<PaginatedMovie> {
+        return this.queryBus.execute(new GetMoviesQuery(paginationArgs.page, paginationArgs.pageSize, title));
     }
 
     @ResolveField(() => [ViewSummary])

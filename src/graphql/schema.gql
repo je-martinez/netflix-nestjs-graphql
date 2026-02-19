@@ -20,12 +20,25 @@ type Movie {
   viewSummaries: [ViewSummary!]
 }
 
+type PaginatedMovie {
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  nodes: [Movie]!
+  totalCount: Int!
+}
+
+type PaginatedTvShow {
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  nodes: [TvShow]!
+  totalCount: Int!
+}
+
 type Query {
-  hello: String!
   movie(id: ID!): Movie
-  movies(after: String, first: Float, title: String): [Movie!]!
+  movies(page: Int! = 1, pageSize: Int! = 10, title: String): PaginatedMovie!
   tvShow(id: ID!): TvShow
-  tvShows(after: String, first: Float, title: String): [TvShow!]!
+  tvShows(page: Int! = 1, pageSize: Int! = 10, title: String): PaginatedTvShow!
 }
 
 type Season {

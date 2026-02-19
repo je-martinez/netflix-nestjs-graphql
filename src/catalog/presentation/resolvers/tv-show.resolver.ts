@@ -1,4 +1,6 @@
 import { Resolver, Query, Args, ID, ResolveField, Parent } from '@nestjs/graphql';
+import { PaginationArgs } from '../../../common/pagination/pagination.args';
+import { PaginatedTvShow } from '../dto/paginated-tv-show.response';
 import { QueryBus } from '@nestjs/cqrs';
 import { TvShow } from '../../domain/entities/tv-show.entity';
 import { Season } from '../../domain/entities/season.entity';
@@ -18,13 +20,12 @@ export class TvShowResolver {
         return this.queryBus.execute(new GetTvShowQuery(id));
     }
 
-    @Query(() => [TvShow])
+    @Query(() => PaginatedTvShow)
     async tvShows(
-        @Args('first', { nullable: true }) first?: number,
-        @Args('after', { nullable: true }) after?: string,
+        @Args() paginationArgs: PaginationArgs,
         @Args('title', { nullable: true }) title?: string,
-    ): Promise<TvShow[]> {
-        return this.queryBus.execute(new GetTvShowsQuery(first, after, title));
+    ): Promise<PaginatedTvShow> {
+        return this.queryBus.execute(new GetTvShowsQuery(paginationArgs.page, paginationArgs.pageSize, title));
     }
 
     @ResolveField(() => [Season])

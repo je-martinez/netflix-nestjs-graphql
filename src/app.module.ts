@@ -4,7 +4,6 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { join } from 'path';
-import { HelloResolver } from './hello.resolver';
 import { HealthModule } from './health/health.module';
 import { DatabaseModule } from './database/database.module';
 import { CatalogModule } from './catalog/catalog.module';
@@ -34,6 +33,6 @@ import { validate } from './config/env.validation';
     CatalogModule,
   ],
   controllers: [],
-  providers: [HelloResolver],
+  providers: [],
 })
 export class AppModule { }

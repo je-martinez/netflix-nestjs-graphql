@@ -7,35 +7,42 @@ import { Movie } from '../../domain/entities/movie.entity';
 export class GetMoviesHandler implements IQueryHandler<GetMoviesQuery> {
     constructor(private readonly prisma: PrismaService) { }
 
-    async execute(query: GetMoviesQuery): Promise<Movie[]> {
-        const { first = 10, after, title } = query;
-
-        // Simple pagination using skip/take for now, or cursor based if 'after' is a cursor
-        // For simplicity, let's assume 'after' is just an ID for cursor pagination if we were doing it properly, 
-        // but Prisma makes it easy. Let's stick to simple 'take' and optional 'where' for now.
+    async execute(query: GetMoviesQuery): Promise<any> {
+        const { page = 1, pageSize = 10, title } = query;
 
         const where: any = {};
         if (title) {
             where.title = { contains: title, mode: 'insensitive' };
         }
 
+        const totalCount = await this.prisma.movie.count({ where });
+
         const movies = await this.prisma.movie.findMany({
-            take: first,
-            skip: after ? 1 : 0, // Simplified cursor logic
-            cursor: after ? { id: BigInt(after) } : undefined,
+            take: pageSize + 1, // Fetch one extra to check for next page
+            skip: (page - 1) * pageSize,
             where,
+            orderBy: { id: 'asc' }, // Ensure consistent ordering
         });
 
-        return movies.map(movie => ({
-            id: movie.id.toString(),
-            title: movie.title,
-            originalTitle: movie.original_title ?? undefined,
-            releaseDate: movie.release_date || undefined,
-            availableGlobally: movie.available_globally ?? undefined,
-            locale: movie.locale ?? undefined,
-            createdDate: movie.created_date,
-            modifiedDate: movie.modified_date,
-            runtime: movie.runtime ? Number(movie.runtime) : undefined,
-        }));
+        const hasNext = movies.length > pageSize;
+        const nodes = hasNext ? movies.slice(0, pageSize) : movies;
+        const hasPrevious = page > 1;
+
+        return {
+            nodes: nodes.map(movie => ({
+                id: movie.id.toString(),
+                title: movie.title,
+                originalTitle: movie.original_title ?? undefined,
+                releaseDate: movie.release_date || undefined,
+                availableGlobally: movie.available_globally ?? undefined,
+                locale: movie.locale ?? undefined,
+                createdDate: movie.created_date,
+                modifiedDate: movie.modified_date,
+                runtime: movie.runtime ? Number(movie.runtime) : undefined,
+            })),
+            hasNext,
+            hasPrevious,
+            totalCount,
+        };
     }
 }
