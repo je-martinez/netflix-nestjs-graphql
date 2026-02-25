@@ -1,8 +1,11 @@
 import { SecretsManagerClient, CreateSecretCommand, PutSecretValueCommand } from '@aws-sdk/client-secrets-manager';
 import { SSMClient, PutParameterCommand } from '@aws-sdk/client-ssm';
+import { Logger } from '@nestjs/common';
 import { config } from 'dotenv';
 import * as fs from 'fs';
 import * as path from 'path';
+
+const logger = new Logger('LocalStackSync');
 
 // Load .env
 const envPath = path.resolve(__dirname, '../../.env');
@@ -26,7 +29,7 @@ const ssmClient = new SSMClient({
 });
 
 async function sync() {
-    console.log('Starting sync to LocalStack...');
+    logger.log('Starting sync to LocalStack...');
 
     for (const [key, value] of Object.entries(envConfig)) {
         if (key.startsWith('SECRET_')) {
@@ -37,7 +40,7 @@ async function sync() {
                         SecretString: value,
                     })
                 );
-                console.log(`Created secret: ${key}`);
+                logger.log(`Created secret: ${key}`);
             } catch (err: any) {
                 if (err.name === 'ResourceExistsException') {
                     await secretsClient.send(
@@ -46,9 +49,9 @@ async function sync() {
                             SecretString: value,
                         })
                     );
-                    console.log(`Updated secret: ${key}`);
+                    logger.log(`Updated secret: ${key}`);
                 } else {
-                    console.error(`Failed to sync secret ${key}:`, err.message);
+                    logger.error(`Failed to sync secret ${key}:`, err.message);
                 }
             }
         } else if (key.startsWith('SSM_')) {
@@ -62,14 +65,14 @@ async function sync() {
                         Overwrite: true,
                     })
                 );
-                console.log(`Put SSM parameter: ${ssmName}`);
+                logger.log(`Put SSM parameter: ${ssmName}`);
             } catch (err: any) {
-                console.error(`Failed to sync SSM parameter ${key}:`, err.message);
+                logger.error(`Failed to sync SSM parameter ${key}:`, err.message);
             }
         }
     }
 
-    console.log('Sync complete.');
+    logger.log('Sync complete.');
 }
 
-sync().catch(console.error);
+sync().catch((err) => logger.error('Sync failed', err));
