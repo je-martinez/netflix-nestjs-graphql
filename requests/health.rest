@@ -1,0 +1,10 @@
+### Variables
+@baseUrl = http://localhost:3000
+
+###
+# @name checkLiveness
+GET {{baseUrl}}/health/live
+
+###
+# @name checkReadiness
+GET {{baseUrl}}/health/ready
