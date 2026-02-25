@@ -45,7 +45,7 @@ async function bootstrap() {
     },
   });
 
-  const config = loadConfig();
+  const config = await loadConfig();
   await app.listen(config.port, '0.0.0.0');
 }
 bootstrap();
