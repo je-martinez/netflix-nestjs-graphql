@@ -13,6 +13,7 @@
     "prebuild": "pnpm run config:sync",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "config:sync": "ts-node aws/local/sync.ts",
+    "sync:images": "ts-node scripts/sync-tmdb-images.ts",
     "prestart": "pnpm run config:sync",
     "start": "nest start",
     "prestart:dev": "pnpm run config:sync",
