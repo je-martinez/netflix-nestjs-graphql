@@ -46,15 +46,9 @@ export default async () => {
   const ssmClient = new SSMClient(awsConfig);
 
   // Database secrets
-  const dbUrl = await getSecret(secretsClient, 'SECRET_DATABASE_URL');
-  const dbReplica1 = await getSecret(
-    secretsClient,
-    'SECRET_DATABASE_URL_REPLICA_1',
-  );
-  const dbReplica2 = await getSecret(
-    secretsClient,
-    'SECRET_DATABASE_URL_REPLICA_2',
-  );
+  const dbUrl = await getSecret(secretsClient, 'DATABASE_URL');
+  const dbReplica1 = await getSecret(secretsClient, 'DATABASE_URL_REPLICA_1');
+  const dbReplica2 = await getSecret(secretsClient, 'DATABASE_URL_REPLICA_2');
 
   return {
     port: parseInt(process.env.PORT || '3000', 10),
