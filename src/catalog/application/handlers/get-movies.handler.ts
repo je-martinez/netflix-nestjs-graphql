@@ -1,3 +1,5 @@
+import { CachePrefix, CacheTTL } from '@/cache/cache.constants';
+import { CacheService } from '@/cache/infrastructure/cache.service';
 import { GetMoviesQuery } from '@/catalog/application/queries/get-movies.query';
 import { Movie } from '@/catalog/domain/entities/movie.entity';
 import { IPaginatedType } from '@/common/pagination/paginated.response';
@@ -7,11 +9,18 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
 @QueryHandler(GetMoviesQuery)
 export class GetMoviesHandler implements IQueryHandler<GetMoviesQuery> {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly cache: CacheService,
+    ) { }
 
     async execute(query: GetMoviesQuery): Promise<IPaginatedType<Movie>> {
         const { title } = query;
         const { page, pageSize, warnings } = getPaginationParams(query.page, query.pageSize);
+        const cacheKey = `${CachePrefix.MOVIES}:${page}:${pageSize}:${title ?? ''}`;
+
+        const cached = await this.cache.get<IPaginatedType<Movie>>(cacheKey);
+        if (cached) return { ...cached, warnings };
 
         const where: any = {};
         if (title) {
@@ -21,17 +30,17 @@ export class GetMoviesHandler implements IQueryHandler<GetMoviesQuery> {
         const totalCount = await this.prisma.movie.count({ where });
 
         const movies = await this.prisma.movie.findMany({
-            take: pageSize + 1, // Fetch one extra to check for next page
+            take: pageSize + 1,
             skip: (page - 1) * pageSize,
             where,
-            orderBy: { id: 'asc' }, // Ensure consistent ordering
+            orderBy: { id: 'asc' },
         });
 
         const hasNext = movies.length > pageSize;
         const nodes = hasNext ? movies.slice(0, pageSize) : movies;
         const hasPrevious = page > 1;
 
-        return {
+        const result: IPaginatedType<Movie> = {
             nodes: nodes.map(movie => ({
                 id: movie.id.toString(),
                 title: movie.title,
@@ -48,7 +57,9 @@ export class GetMoviesHandler implements IQueryHandler<GetMoviesQuery> {
             totalCount,
             page,
             pageSize,
-            warnings,
         };
+
+        await this.cache.set(cacheKey, result, CacheTTL.LIST);
+        return { ...result, warnings };
     }
 }

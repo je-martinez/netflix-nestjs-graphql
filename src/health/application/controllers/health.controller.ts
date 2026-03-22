@@ -1,5 +1,6 @@
 import { PrismaService } from '@/database/prisma.service';
 import { AwsHealthIndicator } from '@/health/infrastructure/indicators/aws.health';
+import { RedisHealthIndicator } from '@/health/infrastructure/indicators/redis.health';
 import { Controller, Get } from '@nestjs/common';
 import { HealthCheck, HealthCheckService, HttpHealthIndicator, PrismaHealthIndicator } from '@nestjs/terminus';
 
@@ -11,6 +12,7 @@ export class HealthController {
         private prismaHealth: PrismaHealthIndicator,
         private prisma: PrismaService,
         private awsHealth: AwsHealthIndicator,
+        private redisHealth: RedisHealthIndicator,
     ) { }
 
     @Get('live')
@@ -28,6 +30,7 @@ export class HealthController {
             () => this.prismaHealth.pingCheck('database', this.prisma),
             () => this.awsHealth.checkSecretsManager('aws_secrets_manager'),
             () => this.awsHealth.checkSsm('aws_ssm'),
+            () => this.redisHealth.check('redis'),
         ]);
     }
 }

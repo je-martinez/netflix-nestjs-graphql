@@ -1,3 +1,5 @@
+import { CachePrefix, CacheTTL } from '@/cache/cache.constants';
+import { CacheService } from '@/cache/infrastructure/cache.service';
 import { GetTvShowsQuery } from '@/catalog/application/queries/get-tv-shows.query';
 import { TvShow } from '@/catalog/domain/entities/tv-show.entity';
 import { IPaginatedType } from '@/common/pagination/paginated.response';
@@ -7,11 +9,18 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
 @QueryHandler(GetTvShowsQuery)
 export class GetTvShowsHandler implements IQueryHandler<GetTvShowsQuery> {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly cache: CacheService,
+    ) { }
 
     async execute(query: GetTvShowsQuery): Promise<IPaginatedType<TvShow>> {
         const { title } = query;
         const { page, pageSize, warnings } = getPaginationParams(query.page, query.pageSize);
+        const cacheKey = `${CachePrefix.TV_SHOWS}:${page}:${pageSize}:${title ?? ''}`;
+
+        const cached = await this.cache.get<IPaginatedType<TvShow>>(cacheKey);
+        if (cached) return { ...cached, warnings };
 
         const where: any = {};
         if (title) {
@@ -31,7 +40,7 @@ export class GetTvShowsHandler implements IQueryHandler<GetTvShowsQuery> {
         const nodes = hasNext ? tvShows.slice(0, pageSize) : tvShows;
         const hasPrevious = page > 1;
 
-        return {
+        const result: IPaginatedType<TvShow> = {
             nodes: nodes.map(tvShow => ({
                 id: tvShow.id.toString(),
                 title: tvShow.title,
@@ -47,7 +56,9 @@ export class GetTvShowsHandler implements IQueryHandler<GetTvShowsQuery> {
             totalCount,
             page,
             pageSize,
-            warnings,
         };
+
+        await this.cache.set(cacheKey, result, CacheTTL.LIST);
+        return { ...result, warnings };
     }
 }

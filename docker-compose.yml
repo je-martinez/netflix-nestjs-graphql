@@ -58,6 +58,16 @@ services:
       echo 'Database seeded.';
       "
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    hostname: redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+
   localstack:
     image: localstack/localstack
     container_name: localstack
@@ -73,3 +83,4 @@ volumes:
   roach1-data:
   roach2-data:
   roach3-data:
+  redis-data:

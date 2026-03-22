@@ -32,6 +32,7 @@ const SECRET_KEYS: string[] = [
     'DATABASE_URL',
     'DATABASE_URL_REPLICA_1',
     'DATABASE_URL_REPLICA_2',
+    'REDIS_URL',
 ];
 
 const SSM_KEYS: string[] = [];

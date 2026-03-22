@@ -1,6 +1,7 @@
 import { DatabaseModule } from '@/database/database.module';
 import { HealthController } from '@/health/application/controllers/health.controller';
 import { AwsHealthIndicator } from '@/health/infrastructure/indicators/aws.health';
+import { RedisHealthIndicator } from '@/health/infrastructure/indicators/redis.health';
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { TerminusModule } from '@nestjs/terminus';
@@ -8,6 +9,6 @@ import { TerminusModule } from '@nestjs/terminus';
 @Module({
   imports: [TerminusModule, HttpModule, DatabaseModule],
   controllers: [HealthController],
-  providers: [AwsHealthIndicator],
+  providers: [AwsHealthIndicator, RedisHealthIndicator],
 })
 export class HealthModule { }

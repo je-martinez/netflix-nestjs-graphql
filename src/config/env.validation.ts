@@ -5,6 +5,7 @@ export const envSchema = z.object({
     DATABASE_URL: z.string().url(),
     DATABASE_URL_REPLICA_1: z.string().url(),
     DATABASE_URL_REPLICA_2: z.string().url(),
+    REDIS_URL: z.string().url().default('redis://localhost:6379'),
     ENV: z.string().optional(),
 });
 

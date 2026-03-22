@@ -49,6 +49,9 @@ export default async () => {
   const dbReplica1 = await getSecret(secretsClient, 'DATABASE_URL_REPLICA_1');
   const dbReplica2 = await getSecret(secretsClient, 'DATABASE_URL_REPLICA_2');
 
+  // Redis secret
+  const redisUrl = await getSecret(secretsClient, 'REDIS_URL');
+
   return {
     port: parseInt(process.env.PORT || '3000', 10),
     env: process.env.ENV || 'development',
@@ -56,6 +59,9 @@ export default async () => {
       url: dbUrl,
       replica1Url: dbReplica1,
       replica2Url: dbReplica2,
+    },
+    redis: {
+      url: redisUrl || 'redis://localhost:6379',
     },
   };
 };
