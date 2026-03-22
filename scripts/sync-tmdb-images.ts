@@ -1,9 +1,12 @@
-import { PrismaClient } from '../generated/prisma';
+import { PrismaPg } from '@prisma/adapter-pg';
 import axios from 'axios';
-import * as fs from 'fs';
-import * as path from 'path';
+import { PrismaClient } from 'generated/prisma/client';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+    adapter: new PrismaPg({
+        connectionString: process.env.DATABASE_URL,
+    }),
+});
 
 // Asegúrate de tener tu API Key de TMDB en tu archivo .env
 // TMDB_API_KEY=tu_api_key_aqui
