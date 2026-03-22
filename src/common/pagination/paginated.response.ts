@@ -1,4 +1,3 @@
-
 import { Field, ObjectType, Int } from '@nestjs/graphql';
 import { Type } from '@nestjs/common';
 
@@ -9,6 +8,7 @@ export interface IPaginatedType<T> {
     totalCount: number;
     page: number;
     pageSize: number;
+    warnings?: string[];
 }
 
 export function PaginatedResponse<T>(classRef: Type<T>): Type<IPaginatedType<T>> {
@@ -31,6 +31,9 @@ export function PaginatedResponse<T>(classRef: Type<T>): Type<IPaginatedType<T>>
 
         @Field(() => Int)
         pageSize: number;
+
+        @Field(() => [String], { nullable: true })
+        warnings?: string[];
     }
     return PaginatedType as Type<IPaginatedType<T>>;
 }

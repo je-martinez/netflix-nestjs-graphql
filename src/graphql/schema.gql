@@ -27,6 +27,7 @@ type PaginatedMovie {
   page: Int!
   pageSize: Int!
   totalCount: Int!
+  warnings: [String!]
 }
 
 type PaginatedTvShow {
@@ -36,6 +37,7 @@ type PaginatedTvShow {
   page: Int!
   pageSize: Int!
   totalCount: Int!
+  warnings: [String!]
 }
 
 type Query {

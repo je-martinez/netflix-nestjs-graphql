@@ -8,7 +8,13 @@ export class GetMoviesHandler implements IQueryHandler<GetMoviesQuery> {
     constructor(private readonly prisma: PrismaService) { }
 
     async execute(query: GetMoviesQuery): Promise<any> {
-        const { page = 1, pageSize = 10, title } = query;
+        let { page = 1, pageSize = 10, title } = query;
+        let warnings: string[] | undefined;
+
+        if (pageSize > 200) {
+            pageSize = 200;
+            warnings = ['The maximum supported pageSize is 200.'];
+        }
 
         const where: any = {};
         if (title) {
@@ -45,6 +51,7 @@ export class GetMoviesHandler implements IQueryHandler<GetMoviesQuery> {
             totalCount,
             page,
             pageSize,
+            warnings,
         };
     }
 }
