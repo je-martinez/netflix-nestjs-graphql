@@ -1,20 +1,17 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetTvShowsQuery } from '../queries/get-tv-shows.query';
-import { PrismaService } from '../../../database/prisma.service';
 import { TvShow } from '../../domain/entities/tv-show.entity';
+import { getPaginationParams } from '../../../common/pagination/pagination.util';
+import { IPaginatedType } from '../../../common/pagination/paginated.response';
+import { PrismaService } from '../../../database/prisma.service';
 
 @QueryHandler(GetTvShowsQuery)
 export class GetTvShowsHandler implements IQueryHandler<GetTvShowsQuery> {
     constructor(private readonly prisma: PrismaService) { }
 
-    async execute(query: GetTvShowsQuery): Promise<any> {
-        let { page = 1, pageSize = 10, title } = query;
-        let warnings: string[] | undefined;
-
-        if (pageSize > 200) {
-            pageSize = 200;
-            warnings = ['The maximum supported pageSize is 200.'];
-        }
+    async execute(query: GetTvShowsQuery): Promise<IPaginatedType<TvShow>> {
+        const { title } = query;
+        const { page, pageSize, warnings } = getPaginationParams(query.page, query.pageSize);
 
         const where: any = {};
         if (title) {

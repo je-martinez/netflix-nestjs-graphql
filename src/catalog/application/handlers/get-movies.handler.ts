@@ -1,20 +1,17 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetMoviesQuery } from '../queries/get-movies.query';
-import { PrismaService } from '../../../database/prisma.service';
 import { Movie } from '../../domain/entities/movie.entity';
+import { getPaginationParams } from '../../../common/pagination/pagination.util';
+import { IPaginatedType } from '../../../common/pagination/paginated.response';
+import { PrismaService } from '../../../database/prisma.service';
 
 @QueryHandler(GetMoviesQuery)
 export class GetMoviesHandler implements IQueryHandler<GetMoviesQuery> {
     constructor(private readonly prisma: PrismaService) { }
 
-    async execute(query: GetMoviesQuery): Promise<any> {
-        let { page = 1, pageSize = 10, title } = query;
-        let warnings: string[] | undefined;
-
-        if (pageSize > 200) {
-            pageSize = 200;
-            warnings = ['The maximum supported pageSize is 200.'];
-        }
+    async execute(query: GetMoviesQuery): Promise<IPaginatedType<Movie>> {
+        const { title } = query;
+        const { page, pageSize, warnings } = getPaginationParams(query.page, query.pageSize);
 
         const where: any = {};
         if (title) {
