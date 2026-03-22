@@ -20,6 +20,23 @@ export class CacheService implements OnModuleDestroy {
         });
     }
 
+    private static readonly ISO_DATE_RE =
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/;
+
+    private serialize(value: unknown): string {
+        return JSON.stringify(value, (_, v) =>
+            typeof v === 'bigint' ? v.toString() : v,
+        );
+    }
+
+    private deserialize<T>(data: string): T {
+        return JSON.parse(data, (_, v) =>
+            typeof v === 'string' && CacheService.ISO_DATE_RE.test(v)
+                ? new Date(v)
+                : v,
+        ) as T;
+    }
+
     async connect(): Promise<void> {
         await this.client.connect();
         this.logger.log('Redis connected');
@@ -32,8 +49,12 @@ export class CacheService implements OnModuleDestroy {
     async get<T>(key: string): Promise<T | null> {
         try {
             const data = await this.client.get(key);
-            if (!data) return null;
-            return JSON.parse(data) as T;
+            if (!data) {
+                this.logger.debug(`MISS  ${key}`);
+                return null;
+            }
+            this.logger.debug(`HIT   ${key}`);
+            return this.deserialize<T>(data);
         } catch {
             this.logger.warn(`Cache get failed for key: ${key}`);
             return null;
@@ -42,15 +63,17 @@ export class CacheService implements OnModuleDestroy {
 
     async set<T>(key: string, value: T, ttlSeconds: number): Promise<void> {
         try {
-            await this.client.set(key, JSON.stringify(value), 'EX', ttlSeconds);
-        } catch {
-            this.logger.warn(`Cache set failed for key: ${key}`);
+            await this.client.set(key, this.serialize(value), 'EX', ttlSeconds);
+            this.logger.debug(`SET   ${key} (ttl=${ttlSeconds}s)`);
+        } catch (err: any) {
+            this.logger.warn(`Cache set failed for key "${key}": ${err.message}`);
         }
     }
 
     async del(key: string): Promise<void> {
         try {
             await this.client.del(key);
+            this.logger.debug(`DEL   ${key}`);
         } catch {
             this.logger.warn(`Cache del failed for key: ${key}`);
         }
@@ -60,7 +83,13 @@ export class CacheService implements OnModuleDestroy {
         if (keys.length === 0) return [];
         try {
             const results = await this.client.mget(...keys);
-            return results.map((r) => (r ? (JSON.parse(r) as T) : null));
+            const parsed = results.map((r) => (r ? this.deserialize<T>(r) : null));
+            const hits = parsed.filter(Boolean).length;
+            const misses = keys.length - hits;
+            this.logger.debug(
+                `MGET  ${hits} hit / ${misses} miss  (${this.keyPattern(keys)} ×${keys.length})`,
+            );
+            return parsed;
         } catch {
             this.logger.warn(`Cache mget failed for ${keys.length} keys`);
             return keys.map(() => null);
@@ -72,12 +101,21 @@ export class CacheService implements OnModuleDestroy {
         try {
             const pipeline = this.client.pipeline();
             for (const [key, value] of entries) {
-                pipeline.set(key, JSON.stringify(value), 'EX', ttlSeconds);
+                pipeline.set(key, this.serialize(value), 'EX', ttlSeconds);
             }
             await pipeline.exec();
-        } catch {
-            this.logger.warn(`Cache mset failed for ${entries.length} keys`);
+            const keys = entries.map(([k]) => k);
+            this.logger.debug(
+                `MSET  ${entries.length} keys (ttl=${ttlSeconds}s)  (${this.keyPattern(keys)} ×${entries.length})`,
+            );
+        } catch (err: any) {
+            this.logger.warn(`Cache mset failed for ${entries.length} keys: ${err.message}`);
         }
+    }
+
+    private keyPattern(keys: string[]): string {
+        const prefix = keys[0].substring(0, keys[0].lastIndexOf(':'));
+        return `${prefix}:*`;
     }
 
     async ping(): Promise<boolean> {
