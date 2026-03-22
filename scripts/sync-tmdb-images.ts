@@ -2,41 +2,69 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import axios from 'axios';
 import { PrismaClient } from '../generated/prisma/client';
 
+// TMDB allows 40 requests / 10s (4 req/s).
+// CONCURRENCY=5 chunks + CHUNK_DELAY_MS=2000 → 5 req / 2s = 2.5 req/s — safely under the limit.
+const CONCURRENCY = 5;
+const CHUNK_DELAY_MS = 2000;
+
 const prisma = new PrismaClient({
     adapter: new PrismaPg({
         connectionString: process.env.DATABASE_URL,
     }),
 });
 
-// Asegúrate de tener tu API Key de TMDB en tu archivo .env
-// TMDB_API_KEY=tu_api_key_aqui
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
-const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500'; // Puedes cambiar 'w500' por 'original' para mayor calidad
+const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
+
+// Only strips a year when it appears in parentheses at the end: "Code 8 (2019)" → query="Code 8", year=2019
+// Titles like "Reply 1994" are left untouched: query="Reply 1994", year=null
+function parseTitle(raw: string): { query: string; year: number | null } {
+    const match = raw.match(/^(.*?)\s*\(((?:19|20)\d{2})\)\s*$/);
+    if (match) {
+        return { query: match[1].trim(), year: parseInt(match[2], 10) };
+    }
+    return { query: raw.trim(), year: null };
+}
 
 async function getTmdbImage(title: string, type: 'movie' | 'tv'): Promise<{ poster: string | null; backdrop: string | null }> {
+    const { query, year } = parseTitle(title);
+    const dateField = type === 'movie' ? 'release_date' : 'first_air_date';
+
     try {
         const response = await axios.get(`${TMDB_BASE_URL}/search/${type}`, {
-            params: {
-                api_key: TMDB_API_KEY,
-                query: title,
-                language: 'es-ES',
-                page: 1,
-            },
+            params: { api_key: TMDB_API_KEY, query, language: 'es-ES', page: 1 },
         });
 
-        const results = response.data.results;
-        if (results && results.length > 0) {
-            const firstResult = results[0];
-            return {
-                poster: firstResult.poster_path ? `${TMDB_IMAGE_BASE_URL}${firstResult.poster_path}` : null,
-                backdrop: firstResult.backdrop_path ? `${TMDB_IMAGE_BASE_URL}${firstResult.backdrop_path}` : null,
-            };
-        }
-        return { poster: null, backdrop: null };
+        const results: any[] = response.data.results ?? [];
+        if (results.length === 0) return { poster: null, backdrop: null };
+
+        const result = year
+            ? (results.find(r => new Date(r[dateField]).getFullYear() === year) ?? results[0])
+            : results[0];
+
+        return {
+            poster: result.poster_path ? `${TMDB_IMAGE_BASE_URL}${result.poster_path}` : null,
+            backdrop: result.backdrop_path ? `${TMDB_IMAGE_BASE_URL}${result.backdrop_path}` : null,
+        };
     } catch (error) {
-        console.error(`Error buscando ${title} en TMDB:`, error.message);
+        console.error(`Error buscando "${query}" en TMDB:`, error.message);
         return { poster: null, backdrop: null };
+    }
+}
+
+async function processInChunks<T>(
+    items: T[],
+    handler: (item: T, index: number, total: number) => Promise<void>,
+): Promise<void> {
+    for (let i = 0; i < items.length; i += CONCURRENCY) {
+        const chunk = items.slice(i, i + CONCURRENCY);
+        await Promise.allSettled(
+            chunk.map((item, j) => handler(item, i + j, items.length)),
+        );
+        if (i + CONCURRENCY < items.length) {
+            await new Promise(r => setTimeout(r, CHUNK_DELAY_MS));
+        }
     }
 }
 
@@ -48,109 +76,67 @@ async function main() {
 
     console.log('🎬 Iniciando sincronización de imágenes...');
 
-    // 1. Obtener Películas
+    // 1. Películas
     console.log('\n🍿 Procesando Películas...');
-    const movies = await prisma.movie.findMany({
-        where: {
-            assets: {
-                none: {}
-            }
-        }
-    });
+    const movies = await prisma.movie.findMany({ where: { assets: { none: {} } } });
+    console.log(`   ${movies.length} películas sin imágenes (chunks de ${CONCURRENCY})`);
 
-    for (const movie of movies) {
-        console.log(`Buscando imágenes para la película: "${movie.title}"...`);
+    await processInChunks(movies, async (movie, i, total) => {
+        console.log(`[${i + 1}/${total}] Buscando: "${movie.title}"...`);
         const images = await getTmdbImage(movie.title, 'movie');
 
-        if (images.poster || images.backdrop) {
-            console.log(`✅ ¡Encontrado! Poster: ${images.poster !== null}`);
-
-            if (images.poster) {
-                await prisma.asset.create({
-                    data: {
-                        image_type: 'POSTER',
-                        url: images.poster,
-                        movie_id: movie.id,
-                        created_date: new Date(),
-                        modified_date: new Date(),
-                    }
-                });
-            }
-
-            if (images.backdrop) {
-                await prisma.asset.create({
-                    data: {
-                        image_type: 'BACKDROP',
-                        url: images.backdrop,
-                        movie_id: movie.id,
-                        created_date: new Date(),
-                        modified_date: new Date(),
-                    }
-                });
-            }
-        } else {
-            console.log(`⚠️ No se encontraron imágenes para: "${movie.title}"`);
+        if (!images.poster && !images.backdrop) {
+            console.log(`   ⚠️  Sin resultados para: "${movie.title}"`);
+            return;
         }
 
-        // Esperar un poco para no saturar la API (Rate limiting)
-        await new Promise(resolve => setTimeout(resolve, 250));
-    }
-
-    // 2. Obtener Series (TV Shows)
-    console.log('\n📺 Procesando Series (TV Shows)...');
-    const tvShows = await prisma.tv_show.findMany({
-        where: {
-            assets: {
-                none: {}
-            }
+        console.log(`   ✅ Encontrado — poster: ${!!images.poster}, backdrop: ${!!images.backdrop}`);
+        const creates: Promise<any>[] = [];
+        if (images.poster) {
+            creates.push(prisma.asset.create({
+                data: { image_type: 'POSTER', url: images.poster, movie_id: movie.id, created_date: new Date(), modified_date: new Date() },
+            }));
         }
+        if (images.backdrop) {
+            creates.push(prisma.asset.create({
+                data: { image_type: 'BACKDROP', url: images.backdrop, movie_id: movie.id, created_date: new Date(), modified_date: new Date() },
+            }));
+        }
+        await Promise.all(creates);
     });
 
-    for (const show of tvShows) {
-        console.log(`Buscando imágenes para la serie: "${show.title}"...`);
+    // 2. Series
+    console.log('\n📺 Procesando Series (TV Shows)...');
+    const tvShows = await prisma.tv_show.findMany({ where: { assets: { none: {} } } });
+    console.log(`   ${tvShows.length} series sin imágenes (chunks de ${CONCURRENCY})`);
+
+    await processInChunks(tvShows, async (show, i, total) => {
+        console.log(`[${i + 1}/${total}] Buscando: "${show.title}"...`);
         const images = await getTmdbImage(show.title, 'tv');
 
-        if (images.poster || images.backdrop) {
-            console.log(`✅ ¡Encontrado! Poster: ${images.poster !== null}`);
-
-            if (images.poster) {
-                await prisma.asset.create({
-                    data: {
-                        image_type: 'POSTER',
-                        url: images.poster,
-                        tv_show_id: show.id,
-                        created_date: new Date(),
-                        modified_date: new Date(),
-                    }
-                });
-            }
-
-            if (images.backdrop) {
-                await prisma.asset.create({
-                    data: {
-                        image_type: 'BACKDROP',
-                        url: images.backdrop,
-                        tv_show_id: show.id,
-                        created_date: new Date(),
-                        modified_date: new Date(),
-                    }
-                });
-            }
-        } else {
-            console.log(`⚠️ No se encontraron imágenes para: "${show.title}"`);
+        if (!images.poster && !images.backdrop) {
+            console.log(`   ⚠️  Sin resultados para: "${show.title}"`);
+            return;
         }
 
-        await new Promise(resolve => setTimeout(resolve, 250));
-    }
+        console.log(`   ✅ Encontrado — poster: ${!!images.poster}, backdrop: ${!!images.backdrop}`);
+        const creates: Promise<any>[] = [];
+        if (images.poster) {
+            creates.push(prisma.asset.create({
+                data: { image_type: 'POSTER', url: images.poster, tv_show_id: show.id, created_date: new Date(), modified_date: new Date() },
+            }));
+        }
+        if (images.backdrop) {
+            creates.push(prisma.asset.create({
+                data: { image_type: 'BACKDROP', url: images.backdrop, tv_show_id: show.id, created_date: new Date(), modified_date: new Date() },
+            }));
+        }
+        await Promise.all(creates);
+    });
 
-    console.log('\n✨ ¡Proceso completado! Images guardados en la base de datos.');
+    console.log('\n✨ ¡Proceso completado!');
 }
 
 main()
-    .catch((e) => {
-        console.error(e);
-        process.exit(1);
-    })
-    .finally(async () => {
-        await prisma.$disconnect();
-    });
+    .catch((e) => { console.error(e); process.exit(1); })
+    .finally(async () => { await prisma.$disconnect(); });
