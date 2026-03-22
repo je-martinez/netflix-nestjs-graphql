@@ -1,7 +1,7 @@
+import { ViewSummary } from '@/catalog/domain/entities/view-summary.entity';
+import { PrismaService } from '@/database/prisma.service';
 import { Injectable, Scope } from '@nestjs/common';
 import DataLoader from 'dataloader';
-import { PrismaService } from '../../../database/prisma.service';
-import { ViewSummary } from '../../domain/entities/view-summary.entity';
 
 @Injectable({ scope: Scope.REQUEST })
 export class ViewSummaryBySeasonLoader extends DataLoader<string, ViewSummary[]> {

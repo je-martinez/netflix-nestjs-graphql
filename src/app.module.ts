@@ -1,14 +1,14 @@
-import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
+import { CatalogModule } from '@/catalog/catalog.module';
+import configuration from '@/config/configuration';
+import { validate } from '@/config/env.validation';
+import { DatabaseModule } from '@/database/database.module';
+import { HealthModule } from '@/health/health.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { GraphQLModule } from '@nestjs/graphql';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { join } from 'path';
-import { HealthModule } from './health/health.module';
-import { DatabaseModule } from './database/database.module';
-import { CatalogModule } from './catalog/catalog.module';
-import configuration from './config/configuration';
-import { validate } from './config/env.validation';
 
 @Module({
   imports: [

@@ -1,12 +1,12 @@
-import { Resolver, Query, Args, ID, ResolveField, Parent } from '@nestjs/graphql';
-import { PaginationArgs } from '../../../common/pagination/pagination.args';
-import { PaginatedMovie } from '../dto/paginated-movie.response';
+import { GetMovieQuery } from '@/catalog/application/queries/get-movie.query';
+import { GetMoviesQuery } from '@/catalog/application/queries/get-movies.query';
+import { Movie } from '@/catalog/domain/entities/movie.entity';
+import { ViewSummary } from '@/catalog/domain/entities/view-summary.entity';
+import { ViewSummaryLoader } from '@/catalog/presentation/dataloaders/view-summary.loader';
+import { PaginatedMovie } from '@/catalog/presentation/dto/paginated-movie.response';
+import { PaginationArgs } from '@/common/pagination/pagination.args';
 import { QueryBus } from '@nestjs/cqrs';
-import { Movie } from '../../domain/entities/movie.entity';
-import { ViewSummary } from '../../domain/entities/view-summary.entity';
-import { GetMovieQuery } from '../../application/queries/get-movie.query';
-import { GetMoviesQuery } from '../../application/queries/get-movies.query';
-import { ViewSummaryLoader } from '../dataloaders/view-summary.loader';
+import { Args, ID, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
 @Resolver(() => Movie)
 export class MovieResolver {

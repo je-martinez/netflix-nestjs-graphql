@@ -1,4 +1,3 @@
-import { Int } from '@nestjs/graphql';
 
 export class GetMoviesQuery {
     constructor(

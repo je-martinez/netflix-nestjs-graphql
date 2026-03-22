@@ -1,7 +1,7 @@
+import { ListSecretsCommand, SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
+import { DescribeParametersCommand, SSMClient } from '@aws-sdk/client-ssm';
 import { Injectable } from '@nestjs/common';
 import { HealthIndicatorResult, HealthIndicatorService } from '@nestjs/terminus';
-import { SecretsManagerClient, ListSecretsCommand } from '@aws-sdk/client-secrets-manager';
-import { SSMClient, DescribeParametersCommand } from '@aws-sdk/client-ssm';
 
 @Injectable()
 export class AwsHealthIndicator {

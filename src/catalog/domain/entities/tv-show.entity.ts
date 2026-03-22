@@ -1,5 +1,5 @@
-import { Field, ObjectType, ID } from '@nestjs/graphql';
-import { Season } from './season.entity';
+import { Season } from '@/catalog/domain/entities/season.entity';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class TvShow {

@@ -1,7 +1,7 @@
-import { Resolver, ResolveField, Parent } from '@nestjs/graphql';
-import { Season } from '../../domain/entities/season.entity';
-import { ViewSummary } from '../../domain/entities/view-summary.entity';
-import { ViewSummaryBySeasonLoader } from '../dataloaders/view-summary-by-season.loader';
+import { Season } from '@/catalog/domain/entities/season.entity';
+import { ViewSummary } from '@/catalog/domain/entities/view-summary.entity';
+import { ViewSummaryBySeasonLoader } from '@/catalog/presentation/dataloaders/view-summary-by-season.loader';
+import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 
 @Resolver(() => Season)
 export class SeasonResolver {

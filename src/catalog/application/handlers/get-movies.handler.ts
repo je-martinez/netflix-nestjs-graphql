@@ -1,9 +1,9 @@
+import { GetMoviesQuery } from '@/catalog/application/queries/get-movies.query';
+import { Movie } from '@/catalog/domain/entities/movie.entity';
+import { IPaginatedType } from '@/common/pagination/paginated.response';
+import { getPaginationParams } from '@/common/pagination/pagination.util';
+import { PrismaService } from '@/database/prisma.service';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { GetMoviesQuery } from '../queries/get-movies.query';
-import { Movie } from '../../domain/entities/movie.entity';
-import { getPaginationParams } from '../../../common/pagination/pagination.util';
-import { IPaginatedType } from '../../../common/pagination/paginated.response';
-import { PrismaService } from '../../../database/prisma.service';
 
 @QueryHandler(GetMoviesQuery)
 export class GetMoviesHandler implements IQueryHandler<GetMoviesQuery> {

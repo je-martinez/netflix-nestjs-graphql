@@ -104,7 +104,8 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "moduleNameMapper": {
-      "^generated/(.*)$": "<rootDir>/../generated/$1"
+      "^generated/(.*)$": "<rootDir>/../generated/$1",
+      "^@/(.*)$": "<rootDir>/$1"
     }
   }
 }

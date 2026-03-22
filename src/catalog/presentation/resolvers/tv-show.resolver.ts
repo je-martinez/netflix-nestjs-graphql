@@ -1,12 +1,12 @@
-import { Resolver, Query, Args, ID, ResolveField, Parent } from '@nestjs/graphql';
-import { PaginationArgs } from '../../../common/pagination/pagination.args';
-import { PaginatedTvShow } from '../dto/paginated-tv-show.response';
+import { GetTvShowQuery } from '@/catalog/application/queries/get-tv-show.query';
+import { GetTvShowsQuery } from '@/catalog/application/queries/get-tv-shows.query';
+import { Season } from '@/catalog/domain/entities/season.entity';
+import { TvShow } from '@/catalog/domain/entities/tv-show.entity';
+import { SeasonsLoader } from '@/catalog/presentation/dataloaders/seasons.loader';
+import { PaginatedTvShow } from '@/catalog/presentation/dto/paginated-tv-show.response';
+import { PaginationArgs } from '@/common/pagination/pagination.args';
 import { QueryBus } from '@nestjs/cqrs';
-import { TvShow } from '../../domain/entities/tv-show.entity';
-import { Season } from '../../domain/entities/season.entity';
-import { GetTvShowQuery } from '../../application/queries/get-tv-show.query';
-import { GetTvShowsQuery } from '../../application/queries/get-tv-shows.query';
-import { SeasonsLoader } from '../dataloaders/seasons.loader';
+import { Args, ID, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
 @Resolver(() => TvShow)
 export class TvShowResolver {

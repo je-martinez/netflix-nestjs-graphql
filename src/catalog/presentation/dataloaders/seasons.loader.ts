@@ -1,7 +1,7 @@
+import { Season } from '@/catalog/domain/entities/season.entity';
+import { PrismaService } from '@/database/prisma.service';
 import { Injectable, Scope } from '@nestjs/common';
 import DataLoader from 'dataloader';
-import { PrismaService } from '../../../database/prisma.service';
-import { Season } from '../../domain/entities/season.entity';
 
 @Injectable({ scope: Scope.REQUEST })
 export class SeasonsLoader extends DataLoader<string, Season[]> {

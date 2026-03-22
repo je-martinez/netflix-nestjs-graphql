@@ -1,5 +1,5 @@
-import { Field, ObjectType, ID, Int } from '@nestjs/graphql';
-import { ViewSummary } from './view-summary.entity';
+import { ViewSummary } from '@/catalog/domain/entities/view-summary.entity';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class Season {

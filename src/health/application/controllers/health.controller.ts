@@ -1,7 +1,7 @@
+import { PrismaService } from '@/database/prisma.service';
+import { AwsHealthIndicator } from '@/health/infrastructure/indicators/aws.health';
 import { Controller, Get } from '@nestjs/common';
 import { HealthCheck, HealthCheckService, HttpHealthIndicator, PrismaHealthIndicator } from '@nestjs/terminus';
-import { PrismaService } from '../../../database/prisma.service';
-import { AwsHealthIndicator } from '../../infrastructure/indicators/aws.health';
 
 @Controller('health')
 export class HealthController {

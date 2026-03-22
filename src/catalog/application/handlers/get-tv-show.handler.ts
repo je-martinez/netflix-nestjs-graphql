@@ -1,7 +1,7 @@
+import { GetTvShowQuery } from '@/catalog/application/queries/get-tv-show.query';
+import { TvShow } from '@/catalog/domain/entities/tv-show.entity';
+import { PrismaService } from '@/database/prisma.service';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { GetTvShowQuery } from '../queries/get-tv-show.query';
-import { PrismaService } from '../../../database/prisma.service';
-import { TvShow } from '../../domain/entities/tv-show.entity';
 
 @QueryHandler(GetTvShowQuery)
 export class GetTvShowHandler implements IQueryHandler<GetTvShowQuery> {

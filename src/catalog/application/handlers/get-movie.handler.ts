@@ -1,6 +1,6 @@
+import { GetMovieQuery } from '@/catalog/application/queries/get-movie.query';
+import { Movie } from '@/catalog/domain/entities/movie.entity';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { GetMovieQuery } from '../queries/get-movie.query';
-import { Movie } from '../../domain/entities/movie.entity';
 import { PrismaService } from 'src/database/prisma.service';
 
 @QueryHandler(GetMovieQuery)

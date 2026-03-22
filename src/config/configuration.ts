@@ -1,8 +1,7 @@
 import {
-  SecretsManagerClient,
-  GetSecretValueCommand,
+    GetSecretValueCommand, SecretsManagerClient
 } from '@aws-sdk/client-secrets-manager';
-import { SSMClient, GetParameterCommand } from '@aws-sdk/client-ssm';
+import { GetParameterCommand, SSMClient } from '@aws-sdk/client-ssm';
 
 async function getSecret(
   client: SecretsManagerClient,

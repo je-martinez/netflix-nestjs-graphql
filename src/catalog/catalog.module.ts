@@ -1,16 +1,16 @@
+import { GetMovieHandler } from '@/catalog/application/handlers/get-movie.handler';
+import { GetMoviesHandler } from '@/catalog/application/handlers/get-movies.handler';
+import { GetTvShowHandler } from '@/catalog/application/handlers/get-tv-show.handler';
+import { GetTvShowsHandler } from '@/catalog/application/handlers/get-tv-shows.handler';
+import { SeasonsLoader } from '@/catalog/presentation/dataloaders/seasons.loader';
+import { ViewSummaryBySeasonLoader } from '@/catalog/presentation/dataloaders/view-summary-by-season.loader';
+import { ViewSummaryLoader } from '@/catalog/presentation/dataloaders/view-summary.loader';
+import { MovieResolver } from '@/catalog/presentation/resolvers/movie.resolver';
+import { SeasonResolver } from '@/catalog/presentation/resolvers/season.resolver';
+import { TvShowResolver } from '@/catalog/presentation/resolvers/tv-show.resolver';
+import { DatabaseModule } from '@/database/database.module';
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { DatabaseModule } from '../database/database.module';
-import { GetMovieHandler } from './application/handlers/get-movie.handler';
-import { GetMoviesHandler } from './application/handlers/get-movies.handler';
-import { MovieResolver } from './presentation/resolvers/movie.resolver';
-import { ViewSummaryLoader } from './presentation/dataloaders/view-summary.loader';
-import { ViewSummaryBySeasonLoader } from './presentation/dataloaders/view-summary-by-season.loader';
-import { GetTvShowHandler } from './application/handlers/get-tv-show.handler';
-import { GetTvShowsHandler } from './application/handlers/get-tv-shows.handler';
-import { TvShowResolver } from './presentation/resolvers/tv-show.resolver';
-import { SeasonsLoader } from './presentation/dataloaders/seasons.loader';
-import { SeasonResolver } from './presentation/resolvers/season.resolver';
 
 @Module({
     imports: [CqrsModule, DatabaseModule],

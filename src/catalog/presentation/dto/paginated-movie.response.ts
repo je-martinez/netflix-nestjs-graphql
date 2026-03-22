@@ -1,6 +1,6 @@
+import { Movie } from '@/catalog/domain/entities/movie.entity';
+import { PaginatedResponse } from '@/common/pagination/paginated.response';
 import { ObjectType } from '@nestjs/graphql';
-import { PaginatedResponse } from '../../../common/pagination/paginated.response';
-import { Movie } from '../../domain/entities/movie.entity';
 
 @ObjectType()
 export class PaginatedMovie extends PaginatedResponse(Movie) { }

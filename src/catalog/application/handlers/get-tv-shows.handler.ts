@@ -1,9 +1,9 @@
+import { GetTvShowsQuery } from '@/catalog/application/queries/get-tv-shows.query';
+import { TvShow } from '@/catalog/domain/entities/tv-show.entity';
+import { IPaginatedType } from '@/common/pagination/paginated.response';
+import { getPaginationParams } from '@/common/pagination/pagination.util';
+import { PrismaService } from '@/database/prisma.service';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { GetTvShowsQuery } from '../queries/get-tv-shows.query';
-import { TvShow } from '../../domain/entities/tv-show.entity';
-import { getPaginationParams } from '../../../common/pagination/pagination.util';
-import { IPaginatedType } from '../../../common/pagination/paginated.response';
-import { PrismaService } from '../../../database/prisma.service';
 
 @QueryHandler(GetTvShowsQuery)
 export class GetTvShowsHandler implements IQueryHandler<GetTvShowsQuery> {

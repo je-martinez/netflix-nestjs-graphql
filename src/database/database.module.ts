@@ -1,8 +1,8 @@
+import { PrismaService } from '@/database/prisma.service';
 import { Global, Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { readReplicas } from '@prisma/extension-read-replicas';
-import { ConfigService } from '@nestjs/config';
-import { PrismaService } from './prisma.service';
 import { PrismaClient } from 'generated/prisma/client';
 
 const prismaFactory = (configService: ConfigService) => {
