@@ -80,7 +80,7 @@ model asset {
   id            BigInt   @id @default(sequence())
   created_date  DateTime @db.Timestamptz(6)
   modified_date DateTime @db.Timestamptz(6)
-  image_type    String   @db.String(50)
+  image_type    String   @map("asset_type") @db.String(50)
   url           String   @db.String(255)
   movie_id      BigInt?
   tv_show_id    BigInt?

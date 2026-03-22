@@ -59,9 +59,12 @@ async function processInChunks<T>(
 ): Promise<void> {
     for (let i = 0; i < items.length; i += CONCURRENCY) {
         const chunk = items.slice(i, i + CONCURRENCY);
-        await Promise.allSettled(
+        const results = await Promise.allSettled(
             chunk.map((item, j) => handler(item, i + j, items.length)),
         );
+        results.forEach((r) => {
+            if (r.status === 'rejected') console.error('   ❌ Error en chunk:', r.reason?.message ?? r.reason);
+        });
         if (i + CONCURRENCY < items.length) {
             await new Promise(r => setTimeout(r, CHUNK_DELAY_MS));
         }
@@ -91,18 +94,16 @@ async function main() {
         }
 
         console.log(`   ✅ Encontrado — poster: ${!!images.poster}, backdrop: ${!!images.backdrop}`);
-        const creates: Promise<any>[] = [];
         if (images.poster) {
-            creates.push(prisma.asset.create({
+            await prisma.asset.create({
                 data: { image_type: 'POSTER', url: images.poster, movie_id: movie.id, created_date: new Date(), modified_date: new Date() },
-            }));
+            });
         }
         if (images.backdrop) {
-            creates.push(prisma.asset.create({
+            await prisma.asset.create({
                 data: { image_type: 'BACKDROP', url: images.backdrop, movie_id: movie.id, created_date: new Date(), modified_date: new Date() },
-            }));
+            });
         }
-        await Promise.all(creates);
     });
 
     // 2. Series
@@ -120,18 +121,16 @@ async function main() {
         }
 
         console.log(`   ✅ Encontrado — poster: ${!!images.poster}, backdrop: ${!!images.backdrop}`);
-        const creates: Promise<any>[] = [];
         if (images.poster) {
-            creates.push(prisma.asset.create({
+            await prisma.asset.create({
                 data: { image_type: 'POSTER', url: images.poster, tv_show_id: show.id, created_date: new Date(), modified_date: new Date() },
-            }));
+            });
         }
         if (images.backdrop) {
-            creates.push(prisma.asset.create({
+            await prisma.asset.create({
                 data: { image_type: 'BACKDROP', url: images.backdrop, tv_show_id: show.id, created_date: new Date(), modified_date: new Date() },
-            }));
+            });
         }
-        await Promise.all(creates);
     });
 
     console.log('\n✨ ¡Proceso completado!');
