@@ -23,7 +23,9 @@ code — you only work on `*.spec.ts` files.
 - **Framework:** NestJS (decorators, DI container, `Test.createTestingModule`)
 - **GraphQL layer:** `@nestjs/graphql` — resolvers, `@Query`, `@Mutation`,
   `@ResolveField`, `@Args`, `@Context`, `@Subscription`
-- **ORM / data:** MongoDB with Mongoose (or Prisma if the project uses it)
+- **ORM / data:** Hybrid stack — MongoDB with Mongoose (`@nestjs/mongoose`) AND
+  Prisma v7 (`@prisma/client`). Both coexist. Before mocking, grep the service
+  to determine which one it uses (`@InjectModel` → Mongoose, `PrismaService` → Prisma).
 - **Test runner:** Jest with `@nestjs/testing`
 - **Mocking:** `jest.fn()`, `jest.spyOn`, `jest.mock`, manual factories or
   `@golevelup/ts-jest` if already installed
@@ -40,9 +42,10 @@ Before writing a single line of test code, **always** execute these steps:
 ```
 1a. Read the target file (Read)
 1b. Find its existing spec, if any (Glob: **/*.spec.ts)
-1c. Detect injected dependencies (Grep: constructor|@InjectModel|@Inject)
-1d. Read related interfaces/types if needed
-1e. Check jest.config.ts / tsconfig.json for paths and moduleNameMapper
+1c. Detect injected dependencies (Grep: constructor|@InjectModel|@Inject|PrismaService)
+1d. Determine data layer: @InjectModel → Mongoose pattern; PrismaService → Prisma v7 pattern
+1e. Read related interfaces/types if needed
+1f. Check jest.config.ts / tsconfig.json for paths and moduleNameMapper
 ```
 
 ### 2. Planning
@@ -184,6 +187,56 @@ it('should find user by id', async () => {
 });
 ```
 
+### Service with Prisma v7
+
+```typescript
+// Prisma v7: mock PrismaService at the property level.
+// Never instantiate PrismaClient in tests — it requires a live DB connection.
+import { PrismaService } from '../prisma/prisma.service';
+
+const mockPrisma = {
+  user: {
+    findUnique: jest.fn(),
+    findMany: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+  },
+  // Add other models used by the service under test
+  $transaction: jest.fn(),
+} as unknown as jest.Mocked<PrismaService>;
+
+providers: [
+  UsersService,
+  { provide: PrismaService, useValue: mockPrisma },
+]
+
+// Prisma v7 uses promise-returning methods directly (no .exec() chain)
+it('should find user by id', async () => {
+  mockPrisma.user.findUnique.mockResolvedValueOnce(userStub);
+  const result = await sut.findOne(userStub.id);
+  expect(result).toEqual(userStub);
+  expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
+    where: { id: userStub.id },
+  });
+});
+
+// Testing $transaction in Prisma v7
+it('should run operations inside a transaction', async () => {
+  mockPrisma.$transaction.mockImplementationOnce((fn) => fn(mockPrisma));
+  await sut.transferCredits(fromId, toId, amount);
+  expect(mockPrisma.user.update).toHaveBeenCalledTimes(2);
+});
+```
+
+> **Prisma v7 notes:**
+> - `$transaction` accepts both array form and interactive callback form; mock
+>   accordingly based on what the service uses.
+> - Prisma v7 supports `omit` at the client level — if the service configures
+>   field omission on the PrismaClient instance, reflect that in the stub shape.
+> - Never use `jest.mock('@prisma/client')` — mock `PrismaService` instead so
+>   NestJS DI resolution stays intact.
+
 ### Guard
 
 ```typescript
@@ -255,7 +308,9 @@ npx jest --testPathPattern="users" --coverage \
 
 ## What NOT to do
 
-- ❌ Spin up a real MongoDB or Redis instance
+- ❌ Spin up a real MongoDB, Redis, or Prisma/PostgreSQL instance
+- ❌ Call `new PrismaClient()` inside tests — always inject the mocked `PrismaService`
+- ❌ Use `jest.mock('@prisma/client')` — it breaks NestJS DI; mock `PrismaService` instead
 - ❌ Make real HTTP calls
 - ❌ Mock entire NestJS internal modules (`@nestjs/core`, etc.)
 - ❌ Use `console.log` in tests
