@@ -4,13 +4,13 @@ import configuration from '@/config/configuration';
 import { validate } from '@/config/env.validation';
 import { DatabaseModule } from '@/database/database.module';
 import { HealthModule } from '@/health/health.module';
-import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { graphqlConfig } from '@/config/graphql.config';
+import { TelemetryModule } from '@/telemetry/telemetry.module';
+import { ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { join } from 'path';
 
 @Module({
   imports: [
@@ -23,14 +23,8 @@ import { join } from 'path';
       ttl: 60000,
       limit: 10,
     }]),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/graphql/schema.gql'),
-      sortSchema: true,
-      playground: false,
-      introspection: true,
-      plugins: [ApolloServerPluginLandingPageLocalDefault()],
-    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>(graphqlConfig()),
+    TelemetryModule,
     HealthModule,
     DatabaseModule,
     CacheModule,

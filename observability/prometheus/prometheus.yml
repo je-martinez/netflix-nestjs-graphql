@@ -1,0 +1,22 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    project: 'netflix-nestjs-graphql'
+
+scrape_configs:
+  # Scrape the NestJS app's OTEL Prometheus metrics endpoint.
+  # On macOS/Windows the app runs on the host; host.docker.internal resolves to it.
+  # On Linux, replace host.docker.internal with 172.17.0.1 (default Docker bridge).
+  - job_name: 'netflix-nestjs-graphql'
+    static_configs:
+      - targets: ['host.docker.internal:9464']
+        labels:
+          environment: 'local'
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Scrape Prometheus itself so you can build self-monitoring dashboards.
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']

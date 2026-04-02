@@ -1,3 +1,5 @@
+// MUST be the very first import — patches http, pg, ioredis, etc. before NestJS loads
+import '@/telemetry/instrument';
 import { AppModule } from '@/app.module';
 import loadConfig from '@/config/configuration';
 import helmet from '@fastify/helmet';
@@ -15,17 +17,21 @@ async function bootstrap() {
   );
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
+  const isProd = process.env.NODE_ENV === 'production';
+
   // Security Headers
   await app.register(helmet, {
     contentSecurityPolicy: {
       directives: {
-        defaultSrc: [`'self'`, 'unpkg.com', 'apollo-server-landing-page.cdn.apollographql.com'],
-        styleSrc: [`'self'`, `'unsafe-inline'`, 'cdn.jsdelivr.net', 'fonts.googleapis.com', 'unpkg.com'],
+        defaultSrc: [`'self'`, ...(!isProd ? ['unpkg.com', 'apollo-server-landing-page.cdn.apollographql.com'] : [])],
+        styleSrc: [`'self'`, `'unsafe-inline'`, 'cdn.jsdelivr.net', 'fonts.googleapis.com', ...(!isProd ? ['unpkg.com'] : [])],
         fontSrc: [`'self'`, 'fonts.gstatic.com'],
-        imgSrc: [`'self'`, 'data:', 'cdn.jsdelivr.net', 'apollo-server-landing-page.cdn.apollographql.com'],
-        scriptSrc: [`'self'`, `'unsafe-inline'`, `'unsafe-eval'`, 'cdn.jsdelivr.net', 'unpkg.com', 'embeddable-sandbox.cdn.apollographql.com'],
-        frameSrc: [`'self'`, 'https://sandbox.embed.apollographql.com'],
-        connectSrc: [`'self'`, 'https://sandbox.embed.apollographql.com'],
+        imgSrc: [`'self'`, 'data:', 'cdn.jsdelivr.net', ...(!isProd ? ['apollo-server-landing-page.cdn.apollographql.com'] : [])],
+        scriptSrc: [`'self'`, ...(!isProd ? [`'unsafe-inline'`, `'unsafe-eval'`, 'cdn.jsdelivr.net', 'unpkg.com', 'embeddable-sandbox.cdn.apollographql.com'] : [])],
+        ...(!isProd && {
+          frameSrc: [`'self'`, 'https://sandbox.embed.apollographql.com'],
+          connectSrc: [`'self'`, 'https://sandbox.embed.apollographql.com'],
+        }),
       },
     },
   });
