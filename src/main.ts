@@ -19,11 +19,13 @@ async function bootstrap() {
   await app.register(helmet, {
     contentSecurityPolicy: {
       directives: {
-        defaultSrc: [`'self'`],
-        styleSrc: [`'self'`, `'unsafe-inline'`, 'https://cdn.jsdelivr.net', 'https://fonts.googleapis.com'],
-        fontSrc: [`'self'`, 'https://fonts.gstatic.com'],
-        imgSrc: [`'self'`, 'data:', 'https://cdn.jsdelivr.net'],
-        scriptSrc: [`'self'`, `https: 'unsafe-inline'`, `https://cdn.jsdelivr.net`],
+        defaultSrc: [`'self'`, 'unpkg.com', 'apollo-server-landing-page.cdn.apollographql.com'],
+        styleSrc: [`'self'`, `'unsafe-inline'`, 'cdn.jsdelivr.net', 'fonts.googleapis.com', 'unpkg.com'],
+        fontSrc: [`'self'`, 'fonts.gstatic.com'],
+        imgSrc: [`'self'`, 'data:', 'cdn.jsdelivr.net', 'apollo-server-landing-page.cdn.apollographql.com'],
+        scriptSrc: [`'self'`, `'unsafe-inline'`, `'unsafe-eval'`, 'cdn.jsdelivr.net', 'unpkg.com', 'embeddable-sandbox.cdn.apollographql.com'],
+        frameSrc: [`'self'`, 'https://sandbox.embed.apollographql.com'],
+        connectSrc: [`'self'`, 'https://sandbox.embed.apollographql.com'],
       },
     },
   });

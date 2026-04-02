@@ -4,6 +4,7 @@ import configuration from '@/config/configuration';
 import { validate } from '@/config/env.validation';
 import { DatabaseModule } from '@/database/database.module';
 import { HealthModule } from '@/health/health.module';
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -26,7 +27,9 @@ import { join } from 'path';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/graphql/schema.gql'),
       sortSchema: true,
-      playground: true,
+      playground: false,
+      introspection: true,
+      plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     HealthModule,
     DatabaseModule,
