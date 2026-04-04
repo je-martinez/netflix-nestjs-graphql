@@ -7,6 +7,8 @@ export const envSchema = z.object({
     DATABASE_URL_REPLICA_2: z.string().url(),
     REDIS_URL: z.string().url().default('redis://localhost:6379'),
     ENV: z.string().optional(),
+    LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
+    LOKI_URL: z.string().url().default('http://localhost:3100'),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;
