@@ -247,7 +247,7 @@
     },
     {
       "content": "",
-      "datasource": "${DS_NY-ALERTING2}",
+      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "custom": {}

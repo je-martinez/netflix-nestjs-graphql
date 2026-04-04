@@ -42,11 +42,11 @@ import { LoggerModule } from 'nestjs-pino';
         },
         transport: {
           targets: [
-            {
+            ...(process.env.NODE_ENV !== 'production' ? [{
               target: 'pino-pretty',
               level: 'debug',
               options: { colorize: true },
-            },
+            }] : []),
             {
               target: 'pino-loki',
               level: process.env.LOG_LEVEL ?? 'info',
@@ -56,8 +56,9 @@ import { LoggerModule } from 'nestjs-pino';
                   service: 'netflix-nestjs-graphql',
                   env: process.env.ENV ?? 'local',
                 },
-                batching: true,
-                interval: 5,
+                batching: {
+                  interval: 5,
+                },
               },
             },
           ],
