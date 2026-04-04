@@ -42,7 +42,7 @@ services:
       - roach1
       - roach2
       - roach3
-    entrypoint: 
+    entrypoint:
       - "/bin/bash"
     command: >
       -c "
@@ -92,10 +92,17 @@ services:
       - '--storage.tsdb.path=/prometheus'
       - '--storage.tsdb.retention.time=7d'
       - '--web.enable-lifecycle'
-    # Needed on Linux to reach the host (app) from inside the container.
-    # On macOS/Windows host.docker.internal resolves automatically.
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
+  loki:
+    image: grafana/loki:3.3.2
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - loki_data:/loki
 
   grafana:
     image: grafana/grafana:11.4.0
@@ -107,13 +114,13 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_AUTH_ANONYMOUS_ENABLED=false
-      # Ensure the provisioned datasource uid matches the one used in dashboard JSON
       - GF_FEATURE_TOGGLES_ENABLE=publicDashboards
     volumes:
       - grafana-data:/var/lib/grafana
       - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
     depends_on:
       - prometheus
+      - loki
 
 volumes:
   roach1-data:
@@ -122,3 +129,4 @@ volumes:
   redis-data:
   prometheus-data:
   grafana-data:
+  loki_data:
