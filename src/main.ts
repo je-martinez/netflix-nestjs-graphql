@@ -9,12 +9,16 @@ import {
     FastifyAdapter,
     NestFastifyApplication
 } from '@nestjs/platform-fastify';
+import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
+    { bufferLogs: true },
   );
+
+  app.useLogger(app.get(Logger));
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   const isProd = process.env.NODE_ENV === 'production';
@@ -43,9 +47,6 @@ async function bootstrap() {
   });
 
   // CSRF Protection
-  // Note: GraphQL often uses other methods for CSRF, but if using cookies for auth, this is needed.
-  // For this setup, we'll keep it simple or strictly follow if user wants full CSRF with cookies.
-  // Using @fastify/csrf-protection requiring @fastify/cookie
   await app.register(import('@fastify/cookie'));
   await app.register(import('@fastify/csrf-protection'), {
     cookieOpts: {
