@@ -8,14 +8,6 @@ export function loggerConfig(): Params {
     pinoHttp: {
       level: defaultLevel,
       mixin: otelMixin,
-      customProps: (req: unknown) => {
-        const body = (req as { body?: { operationName?: string; query?: string } }).body;
-        if (!body) return {};
-        const name =
-          body.operationName ??
-          body.query?.match(/^\s*(?:query|mutation|subscription)\s+(\w+)/i)?.[1];
-        return name ? { graphqlOperation: name } : {};
-      },
       redact: ['req.headers.authorization', 'req.headers.cookie'],
       serializers: {
         req: (req: { method: string; url: string }) => ({

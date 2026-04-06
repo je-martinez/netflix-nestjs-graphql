@@ -8,7 +8,7 @@ datasources:
     isDefault: false
     jsonData:
       derivedFields:
-        - name: TraceID
-          matcherRegex: '"traceId":"(\w+)"'
+        - name: trace_id
+          matcherRegex: '"trace_id":"(\w+)"'
           url: ''
           datasourceUid: ''

@@ -1,21 +1,9 @@
-import { isSpanContextValid, trace } from '@opentelemetry/api';
 import { ClsServiceManager } from 'nestjs-cls';
 
+// trace_id / span_id / trace_flags are injected automatically by
+// @opentelemetry/instrumentation-pino (included in auto-instrumentations-node).
+// Adding them here would produce duplicate fields in every log entry.
 export function otelMixin(): Record<string, unknown> {
-  const result: Record<string, unknown> = {};
-
-  const span = trace.getActiveSpan();
-  if (span) {
-    const ctx = span.spanContext();
-    if (isSpanContextValid(ctx)) {
-      result.traceId = ctx.traceId;
-      result.spanId = ctx.spanId;
-      result.traceFlags = ctx.traceFlags;
-    }
-  }
-
   const cls = ClsServiceManager.getClsService();
-  result.userId = cls?.get<string>('userId') ?? 'anonymous';
-
-  return result;
+  return { userId: cls?.get<string>('userId') ?? 'anonymous' };
 }
