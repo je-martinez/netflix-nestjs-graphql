@@ -2,16 +2,20 @@ import { CachePrefix, CacheTTL } from '@/cache/cache.constants';
 import { CacheService } from '@/cache/infrastructure/cache.service';
 import { GetTvShowQuery } from '@/catalog/application/queries/get-tv-show.query';
 import { TvShow } from '@/catalog/domain/entities/tv-show.entity';
+import { LogHandler } from '@/telemetry/logging/log-handler.decorator';
 import { PrismaService } from '@/database/prisma.service';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 
 @QueryHandler(GetTvShowQuery)
 export class GetTvShowHandler implements IQueryHandler<GetTvShowQuery> {
     constructor(
         private readonly prisma: PrismaService,
         private readonly cache: CacheService,
+        @InjectPinoLogger(GetTvShowHandler.name) readonly logger: PinoLogger,
     ) { }
 
+    @LogHandler()
     async execute(query: GetTvShowQuery): Promise<TvShow | null> {
         const { id } = query;
         const cacheKey = `${CachePrefix.TV_SHOW}:${id}`;

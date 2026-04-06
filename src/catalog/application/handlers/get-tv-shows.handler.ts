@@ -4,16 +4,20 @@ import { GetTvShowsQuery } from '@/catalog/application/queries/get-tv-shows.quer
 import { TvShow } from '@/catalog/domain/entities/tv-show.entity';
 import { IPaginatedType } from '@/common/pagination/paginated.response';
 import { getPaginationParams } from '@/common/pagination/pagination.util';
+import { LogHandler } from '@/telemetry/logging/log-handler.decorator';
 import { PrismaService } from '@/database/prisma.service';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 
 @QueryHandler(GetTvShowsQuery)
 export class GetTvShowsHandler implements IQueryHandler<GetTvShowsQuery> {
     constructor(
         private readonly prisma: PrismaService,
         private readonly cache: CacheService,
+        @InjectPinoLogger(GetTvShowsHandler.name) readonly logger: PinoLogger,
     ) { }
 
+    @LogHandler()
     async execute(query: GetTvShowsQuery): Promise<IPaginatedType<TvShow>> {
         const { title } = query;
         const { page, pageSize, warnings } = getPaginationParams(query.page, query.pageSize);

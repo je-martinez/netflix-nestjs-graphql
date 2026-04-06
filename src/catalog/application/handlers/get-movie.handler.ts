@@ -2,16 +2,20 @@ import { CachePrefix, CacheTTL } from '@/cache/cache.constants';
 import { CacheService } from '@/cache/infrastructure/cache.service';
 import { GetMovieQuery } from '@/catalog/application/queries/get-movie.query';
 import { Movie } from '@/catalog/domain/entities/movie.entity';
+import { LogHandler } from '@/telemetry/logging/log-handler.decorator';
 import { PrismaService } from '@/database/prisma.service';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 
 @QueryHandler(GetMovieQuery)
 export class GetMovieHandler implements IQueryHandler<GetMovieQuery> {
     constructor(
         private readonly prisma: PrismaService,
         private readonly cache: CacheService,
+        @InjectPinoLogger(GetMovieHandler.name) readonly logger: PinoLogger,
     ) { }
 
+    @LogHandler()
     async execute(query: GetMovieQuery): Promise<Movie | null> {
         const { id } = query;
         const cacheKey = `${CachePrefix.MOVIE}:${id}`;

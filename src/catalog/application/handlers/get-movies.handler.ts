@@ -4,16 +4,20 @@ import { GetMoviesQuery } from '@/catalog/application/queries/get-movies.query';
 import { Movie } from '@/catalog/domain/entities/movie.entity';
 import { IPaginatedType } from '@/common/pagination/paginated.response';
 import { getPaginationParams } from '@/common/pagination/pagination.util';
+import { LogHandler } from '@/telemetry/logging/log-handler.decorator';
 import { PrismaService } from '@/database/prisma.service';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 
 @QueryHandler(GetMoviesQuery)
 export class GetMoviesHandler implements IQueryHandler<GetMoviesQuery> {
     constructor(
         private readonly prisma: PrismaService,
         private readonly cache: CacheService,
+        @InjectPinoLogger(GetMoviesHandler.name) readonly logger: PinoLogger,
     ) { }
 
+    @LogHandler()
     async execute(query: GetMoviesQuery): Promise<IPaginatedType<Movie>> {
         const { title } = query;
         const { page, pageSize, warnings } = getPaginationParams(query.page, query.pageSize);
