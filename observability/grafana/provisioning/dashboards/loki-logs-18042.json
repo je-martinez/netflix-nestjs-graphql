@@ -874,7 +874,7 @@
         "useTags": false
       },
       {
-        "allValue": null,
+        "allValue": ".+",
         "current": {},
         "datasource": "loki",
         "definition": "label_values({container=\"$container\"}, pod)",
@@ -896,7 +896,7 @@
         "useTags": false
       },
       {
-        "allValue": null,
+        "allValue": ".+",
         "current": {},
         "datasource": "loki",
         "definition": "label_values({container=\"$container\"}, stream)",

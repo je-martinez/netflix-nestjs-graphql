@@ -1,12 +1,17 @@
-import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
+import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import Redis from 'ioredis';
 
 @Injectable()
-export class CacheService implements OnModuleDestroy {
-    private readonly logger = new Logger(CacheService.name);
+export class CacheService implements OnModuleInit, OnModuleDestroy {
     readonly client: Redis;
 
-    constructor(redisUrl: string) {
+    constructor(
+        @InjectPinoLogger(CacheService.name) private readonly logger: PinoLogger,
+        configService: ConfigService,
+    ) {
+        const redisUrl = configService.get<string>('redis.url', 'redis://localhost:6379');
         this.client = new Redis(redisUrl, {
             maxRetriesPerRequest: 3,
             retryStrategy(times) {
@@ -37,9 +42,13 @@ export class CacheService implements OnModuleDestroy {
         ) as T;
     }
 
+    async onModuleInit(): Promise<void> {
+        await this.connect();
+    }
+
     async connect(): Promise<void> {
         await this.client.connect();
-        this.logger.log('Redis connected');
+        this.logger.info('Redis connected');
     }
 
     async onModuleDestroy(): Promise<void> {
@@ -65,8 +74,8 @@ export class CacheService implements OnModuleDestroy {
         try {
             await this.client.set(key, this.serialize(value), 'EX', ttlSeconds);
             this.logger.debug(`SET   ${key} (ttl=${ttlSeconds}s)`);
-        } catch (err: any) {
-            this.logger.warn(`Cache set failed for key "${key}": ${err.message}`);
+        } catch (err: unknown) {
+            this.logger.warn(`Cache set failed for key "${key}": ${(err as Error).message}`);
         }
     }
 
@@ -108,8 +117,8 @@ export class CacheService implements OnModuleDestroy {
             this.logger.debug(
                 `MSET  ${entries.length} keys (ttl=${ttlSeconds}s)  (${this.keyPattern(keys)} ×${entries.length})`,
             );
-        } catch (err: any) {
-            this.logger.warn(`Cache mset failed for ${entries.length} keys: ${err.message}`);
+        } catch (err: unknown) {
+            this.logger.warn(`Cache mset failed for ${entries.length} keys: ${(err as Error).message}`);
         }
     }
 
