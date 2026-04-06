@@ -12,6 +12,7 @@ import { CachePrefix, CacheTTL } from '@/cache/cache.constants';
 import { TvShow } from '@/catalog/domain/entities/tv-show.entity';
 import { PrismaService } from '@/database/prisma.service';
 import { CacheService } from '@/cache/infrastructure/cache.service';
+import { getLoggerToken } from 'nestjs-pino';
 
 // ---------------------------------------------------------------------------
 // Stub helpers
@@ -64,7 +65,12 @@ describe('GetTvShowHandler', () => {
         tvShowModel = { findUnique: jest.fn() };
 
         const module: TestingModule = await Test.createTestingModule({
-            providers: [GetTvShowHandler, PrismaService, CacheService],
+            providers: [
+                GetTvShowHandler,
+                PrismaService,
+                CacheService,
+                { provide: getLoggerToken(GetTvShowHandler.name), useValue: { debug: jest.fn(), error: jest.fn(), warn: jest.fn(), info: jest.fn() } },
+            ],
         }).compile();
 
         sut = module.get<GetTvShowHandler>(GetTvShowHandler);

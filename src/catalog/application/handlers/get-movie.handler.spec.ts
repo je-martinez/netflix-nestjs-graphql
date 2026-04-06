@@ -13,6 +13,7 @@ import { CachePrefix, CacheTTL } from '@/cache/cache.constants';
 import { Movie } from '@/catalog/domain/entities/movie.entity';
 import { PrismaService } from '@/database/prisma.service';
 import { CacheService } from '@/cache/infrastructure/cache.service';
+import { getLoggerToken } from 'nestjs-pino';
 
 // ---------------------------------------------------------------------------
 // Shared stubs
@@ -70,7 +71,12 @@ describe('GetMovieHandler', () => {
         movieModel = { findUnique: jest.fn() };
 
         const module: TestingModule = await Test.createTestingModule({
-            providers: [GetMovieHandler, PrismaService, CacheService],
+            providers: [
+                GetMovieHandler,
+                PrismaService,
+                CacheService,
+                { provide: getLoggerToken(GetMovieHandler.name), useValue: { debug: jest.fn(), error: jest.fn(), warn: jest.fn(), info: jest.fn() } },
+            ],
         }).compile();
 
         sut = module.get<GetMovieHandler>(GetMovieHandler);

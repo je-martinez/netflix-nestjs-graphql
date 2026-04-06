@@ -41,7 +41,7 @@ describe('otelMixin', () => {
   });
 
   describe('when active span is valid', () => {
-    it('returns traceId, spanId, traceFlags, and userId anonymous', () => {
+    it('returns only userId because trace fields are injected by OTel instrumentation', () => {
       mockGetActiveSpan.mockReturnValue({
         spanContext: () => ({
           traceId: 'aabbccdd11223344aabbccdd11223344',
@@ -52,12 +52,7 @@ describe('otelMixin', () => {
       mockIsSpanContextValid.mockReturnValue(true);
       mockGetClsService.mockReturnValue(null);
 
-      expect(otelMixin()).toEqual({
-        traceId: 'aabbccdd11223344aabbccdd11223344',
-        spanId: 'aabbccdd11223344',
-        traceFlags: 1,
-        userId: 'anonymous',
-      });
+      expect(otelMixin()).toEqual({ userId: 'anonymous' });
     });
   });
 

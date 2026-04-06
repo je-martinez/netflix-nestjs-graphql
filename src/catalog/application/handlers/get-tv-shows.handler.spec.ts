@@ -13,6 +13,7 @@ import { IPaginatedType } from '@/common/pagination/paginated.response';
 import { TvShow } from '@/catalog/domain/entities/tv-show.entity';
 import { PrismaService } from '@/database/prisma.service';
 import { CacheService } from '@/cache/infrastructure/cache.service';
+import { getLoggerToken } from 'nestjs-pino';
 
 // ---------------------------------------------------------------------------
 // Stub helpers
@@ -60,7 +61,12 @@ describe('GetTvShowsHandler', () => {
         tvShowModel = { count: jest.fn(), findMany: jest.fn() };
 
         const module: TestingModule = await Test.createTestingModule({
-            providers: [GetTvShowsHandler, PrismaService, CacheService],
+            providers: [
+                GetTvShowsHandler,
+                PrismaService,
+                CacheService,
+                { provide: getLoggerToken(GetTvShowsHandler.name), useValue: { debug: jest.fn(), error: jest.fn(), warn: jest.fn(), info: jest.fn() } },
+            ],
         }).compile();
 
         sut = module.get<GetTvShowsHandler>(GetTvShowsHandler);
