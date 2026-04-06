@@ -8,6 +8,7 @@ export function loggerConfig(): Params {
     pinoHttp: {
       level: defaultLevel,
       mixin: otelMixin,
+      customReceivedMessage: () => 'request started',
       redact: ['req.headers.authorization', 'req.headers.cookie'],
       serializers: {
         req: (req: { method: string; url: string }) => ({
