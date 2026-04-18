@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>THE ARCHIVE | Cinephile 2000</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;800;900&amp;family=Space+Grotesk:wght@400;500;700&amp;family=Work+Sans:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-highest": "#333539",
+                      "on-secondary-container": "#725f00",
+                      "primary-fixed": "#ffdad5",
+                      "surface-variant": "#333539",
+                      "on-primary-container": "#fff7f6",
+                      "surface-container-lowest": "#0c0e12",
+                      "secondary-fixed-dim": "#e9c400",
+                      "outline": "#af8782",
+                      "primary": "#ffb4aa",
+                      "surface-container-high": "#282a2e",
+                      "on-surface": "#e2e2e8",
+                      "on-background": "#e2e2e8",
+                      "primary-container": "#e50914",
+                      "secondary-container": "#ffdb3c",
+                      "primary-fixed-dim": "#ffb4aa",
+                      "surface-dim": "#111317",
+                      "secondary-fixed": "#ffe16d",
+                      "surface-tint": "#ffb4aa",
+                      "on-primary": "#690003",
+                      "inverse-on-surface": "#2f3035",
+                      "error-container": "#93000a",
+                      "outline-variant": "#5e3f3b",
+                      "on-tertiary": "#00287d",
+                      "tertiary-fixed-dim": "#b5c4ff",
+                      "on-surface-variant": "#e9bcb6",
+                      "background": "#111317",
+                      "secondary": "#fff9ef",
+                      "on-secondary-fixed-variant": "#544600",
+                      "on-primary-fixed": "#410001",
+                      "on-tertiary-fixed-variant": "#153ea3",
+                      "tertiary-fixed": "#dce1ff",
+                      "surface": "#111317",
+                      "tertiary-container": "#4c6cd2",
+                      "inverse-surface": "#e2e2e8",
+                      "error": "#ffb4ab",
+                      "surface-bright": "#37393e",
+                      "tertiary": "#b5c4ff",
+                      "on-error": "#690005",
+                      "surface-container": "#1e2024",
+                      "on-tertiary-container": "#faf8ff",
+                      "on-secondary-fixed": "#221b00",
+                      "surface-container-low": "#1a1c20",
+                      "on-tertiary-fixed": "#00164e",
+                      "inverse-primary": "#c0000c",
+                      "on-secondary": "#3a3000",
+                      "on-error-container": "#ffdad6",
+                      "on-primary-fixed-variant": "#930007"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "fontFamily": {
+                      "headline": ["Epilogue"],
+                      "body": ["Work Sans"],
+                      "label": ["Space Grotesk"]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .dvd-sheen {
+            background: linear-gradient(105deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.08) 20%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.15) 80%);
+            box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.05);
+        }
+        .dvd-spine {
+            box-shadow: inset 4px 0 8px -2px rgba(255, 255, 255, 0.1), inset -1px 0 0 rgba(255, 255, 255, 0.05);
+            background: linear-gradient(to right, #000 0%, #1a1a1a 20%, #000 100%);
+        }
+        .plastic-texture {
+            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuCMKl9MCYxwSqlcLgStA9NRz9iV26l030E3zJCb7JH8OXFUp5SjKZ53-V3VYx4EhLvkgAVM4E-s6JlKYFn2LifinYFT9qpgVV8wZR8dm5eymKGdvynZiYoZeBaFFPH0xmYkbdnq_J8ipO2vINVVK5ncXE0RzwVfkStwHpZ9AghokN-4lN6kO-3br4chXusUie4eCeQ3fypPMNdB0XXYkOvOOTsv3rT5nlJEXf-LuhFCQjb5jw6DyjX2xJeJ1maQL2ZP3aAH_ePqCEQ);
+            opacity: 0.05;
+        }
+        .disc-rainbow {
+            background: radial-gradient(circle at center, transparent 25%, rgba(255, 255, 255, 0.15) 26%, transparent 27%), conic-gradient(from 180deg at 50% 50%, #555 0deg, #ff000022 45deg, #00ff0022 135deg, #0000ff22 225deg, #ff000022 315deg, #555 360deg);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+        .dvd-bezel {
+            box-shadow: 
+                inset 0 2px 3px rgba(255, 255, 255, 0.15),
+                inset 0 -2px 3px rgba(0,0,0,0.5),
+                1px 1px 0 rgba(255,255,255,0.05),
+                -1px -1px 0 rgba(0,0,0,0.3);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- TopNavBar -->
+<header class="w-full top-0 z-50 bg-[#111317] flex justify-between items-center px-8 py-4 shadow-2xl shadow-black">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black text-[#E50914] italic uppercase tracking-tighter font-headline">THE ARCHIVE</span>
+<nav class="hidden md:flex items-center gap-6">
+<a class="font-headline font-bold tracking-tight text-[#ffdb3c] underline decoration-2 underline-offset-8 hover:text-[#ffdb3c] transition-colors duration-300" href="#">Movies</a>
+<a class="font-headline font-bold tracking-tight text-[#e2e2e8] hover:text-[#ffdb3c] transition-colors duration-300" href="#">TV Series</a>
+<a class="font-headline font-bold tracking-tight text-[#e2e2e8] hover:text-[#ffdb3c] transition-colors duration-300" href="#">Special Features</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="bg-surface-container-low border-none focus:ring-1 focus:ring-primary-container text-xs font-label tracking-widest pl-10 pr-4 py-2 w-64 rounded-lg" placeholder="SEARCH VAULT..." type="text"/>
+</div>
+<button class="scale-95 active:opacity-80 text-[#e2e2e8] hover:text-[#ffdb3c] transition-colors duration-300">
+<span class="material-symbols-outlined text-3xl">account_circle</span>
+</button>
+</div>
+</header>
+<div class="bg-gradient-to-b from-[#333539] to-[#111317] h-1"></div>
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="hidden md:flex h-full w-64 fixed left-0 bg-[#111317]/90 backdrop-blur-xl flex-col p-6 space-y-8 shadow-[20px_0_40px_rgba(0,0,0,0.8)] border-r border-white/5 z-40">
+<div class="space-y-1">
+<p class="font-label uppercase text-xs tracking-widest text-[#ffdb3c]">Member Since '04</p>
+<p class="font-label uppercase text-[10px] tracking-[0.2em] text-[#e2e2e8]/60">Premium Tier</p>
+</div>
+<nav class="flex flex-col gap-4">
+<a class="font-label uppercase text-xs tracking-widest text-[#e2e2e8]/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-lg">home</span> Home
+                </a>
+<a class="font-label uppercase text-xs tracking-widest text-[#ffdb3c] flex items-center gap-2 before:content-['\25b6'] before:text-[8px] transition-all duration-200 ease-in-out py-2 px-1" href="#">
+<span class="material-symbols-outlined text-lg">fiber_new</span> New Releases
+                </a>
+<a class="font-label uppercase text-xs tracking-widest text-[#e2e2e8]/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-lg">category</span> Genres
+                </a>
+<a class="font-label uppercase text-xs tracking-widest text-[#e2e2e8]/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-lg">inventory_2</span> My Shelf
+                </a>
+<a class="font-label uppercase text-xs tracking-widest text-[#e2e2e8]/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-lg">settings</span> Settings
+                </a>
+</nav>
+<div class="pt-8">
+<button class="w-full bg-primary-container text-on-primary-container py-3 font-label font-bold tracking-widest text-xs rounded-lg hover:shadow-[0_0_20px_rgba(229,9,20,0.4)] transition-all active:scale-95">
+                    RENT NOW
+                </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-64 p-8 pb-24">
+<section class="mb-12">
+<div class="flex items-end justify-between mb-8">
+<h1 class="font-headline text-5xl font-black italic tracking-tighter text-on-surface uppercase">Curated Catalog</h1>
+<div class="flex gap-4 font-label text-[10px] tracking-widest uppercase text-on-surface-variant">
+<span class="px-3 py-1 bg-surface-container-high rounded border border-white/5">Sort: Release Date</span>
+<span class="px-3 py-1 bg-surface-container-high rounded border border-white/5">Filter: All Regions</span>
+</div>
+</div>
+<!-- DVD Grid -->
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-16 gap-x-12">
+<!-- DVD Case 1 -->
+<div class="group relative flex flex-col gap-4">
+<div class="relative w-full aspect-[2/2.8]">
+<!-- The Peeking Disc -->
+<div class="absolute right-0 top-1/2 -translate-y-1/2 w-[85%] h-[85%] rounded-full bg-stone-900 shadow-2xl border border-white/10 overflow-hidden transition-all duration-500 group-hover:translate-x-[45%] translate-x-[2%] z-0 disc-rainbow">
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-1/4 h-1/4 rounded-full bg-[#111317] border border-white/20 shadow-inner"></div>
+</div>
+</div>
+<!-- Realistic DVD Case -->
+<div class="relative h-full w-full rounded-[4px] bg-[#0c0c0c] p-[3px] shadow-[15px_15px_40px_rgba(0,0,0,0.85),inset_0_1px_1px_rgba(255,255,255,0.1)] transition-transform duration-300 group-hover:-translate-y-2 z-10 dvd-bezel overflow-hidden">
+<!-- Cover Sleeve -->
+<div class="relative h-full w-full overflow-hidden rounded-[2px] bg-black">
+<img alt="Neon Frontier" class="w-full h-full object-cover opacity-90" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPy6bqUgPZvsuQPrdwUb3mog5Pu3fEFLizmVSokyqXnO4-zuCJEC8v83FAA_dH4vFAbcWcbfqhTB8UtdMkuaoVoyCLJFJXDC-6_PWiqbrRgNCBt7Boaf0MO_sRDLx5130pNk_dZFTjGePu5uVFJJbfcphrpFDQmQlu9X6Jw0jLjhiBYhtSuvhaC9zp8ftcX-UPP8_yCRsYokeUju9BKTRDvZvtaHbtGDpDgw9vfiFIYLo75vfBPt83M-yBc6sRs6Ra8g_i-wo8vxo"/>
+<div class="absolute inset-0 plastic-texture pointer-events-none"></div>
+<div class="absolute inset-0 dvd-sheen pointer-events-none"></div>
+<div class="absolute inset-y-0 left-0 w-[18px] dvd-spine pointer-events-none"></div>
+<!-- Branding on case plastic -->
+<div class="absolute top-2 right-4 opacity-20 pointer-events-none">
+<p class="font-label text-[7px] tracking-widest text-white uppercase">DIGITAL ARCHIVE</p>
+</div>
+<div class="absolute bottom-3 left-7 opacity-20 pointer-events-none">
+<span class="material-symbols-outlined text-[12px] text-white">movie</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1 mt-2">
+<h3 class="font-headline font-bold text-sm leading-tight text-on-surface group-hover:text-secondary-container transition-colors">NEON FRONTIER</h3>
+<div class="flex justify-between items-center">
+<p class="font-label text-[10px] text-on-surface-variant tracking-widest uppercase">2001 • 124 MIN</p>
+<span class="text-[8px] border border-white/10 px-1 rounded text-on-surface-variant font-bold">PG-13</span>
+</div>
+</div>
+</div>
+<!-- DVD Case 2 -->
+<div class="group relative flex flex-col gap-4">
+<div class="relative w-full aspect-[2/2.8]">
+<div class="absolute right-0 top-1/2 -translate-y-1/2 w-[85%] h-[85%] rounded-full bg-stone-900 shadow-2xl border border-white/10 overflow-hidden transition-all duration-500 group-hover:translate-x-[45%] translate-x-[2%] z-0 disc-rainbow">
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-1/4 h-1/4 rounded-full bg-[#111317] border border-white/20 shadow-inner"></div>
+</div>
+</div>
+<div class="relative h-full w-full rounded-[4px] bg-[#0c0c0c] p-[3px] shadow-[15px_15px_40px_rgba(0,0,0,0.85),inset_0_1px_1px_rgba(255,255,255,0.1)] transition-transform duration-300 group-hover:-translate-y-2 z-10 dvd-bezel overflow-hidden">
+<div class="relative h-full w-full overflow-hidden rounded-[2px] bg-black">
+<img alt="Asphalt Heat" class="w-full h-full object-cover opacity-90" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBA6VESqprhID3rHFktCU3VtIW30Ys0ZZQz7jLa3gcPRPMLbgWGLWynzc1zZ5XTP2TH2FpFodvRbbTJ6SY2SqX3o-WmtNtQ-KGa5lItGdbU9us5d37ZPkMiKnKPS2SwcMLFRPVPXL3LaYuzK62cf51J5M3BztOHNy2I7NOYXUlGk9agV1G2JTdKC77vEO80S85PuoSeHjJzTzw-eBeCsH-l2nZJr0pzdqPiAZ0wJR_CrAN8_wcyL0JkmTxYrdmq3_cOJX13OmIlKvI"/>
+<div class="absolute inset-0 plastic-texture pointer-events-none"></div>
+<div class="absolute inset-0 dvd-sheen pointer-events-none"></div>
+<div class="absolute inset-y-0 left-0 w-[18px] dvd-spine pointer-events-none"></div>
+<div class="absolute top-2 right-4 opacity-20">
+<p class="font-label text-[7px] tracking-widest text-white uppercase">DIGITAL ARCHIVE</p>
+</div>
+<div class="absolute bottom-3 left-7 opacity-20">
+<span class="material-symbols-outlined text-[12px] text-white">movie</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1 mt-2">
+<h3 class="font-headline font-bold text-sm leading-tight text-on-surface group-hover:text-secondary-container transition-colors">ASPHALT HEAT</h3>
+<div class="flex justify-between items-center">
+<p class="font-label text-[10px] text-on-surface-variant tracking-widest uppercase">1999 • 108 MIN</p>
+<span class="text-[8px] border border-white/10 px-1 rounded text-on-surface-variant font-bold">R</span>
+</div>
+</div>
+</div>
+<!-- DVD Case 3 -->
+<div class="group relative flex flex-col gap-4">
+<div class="relative w-full aspect-[2/2.8]">
+<div class="absolute right-0 top-1/2 -translate-y-1/2 w-[85%] h-[85%] rounded-full bg-stone-900 shadow-2xl border border-white/10 overflow-hidden transition-all duration-500 group-hover:translate-x-[45%] translate-x-[2%] z-0 disc-rainbow">
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-1/4 h-1/4 rounded-full bg-[#111317] border border-white/20 shadow-inner"></div>
+</div>
+</div>
+<div class="relative h-full w-full rounded-[4px] bg-[#0c0c0c] p-[3px] shadow-[15px_15px_40px_rgba(0,0,0,0.85),inset_0_1px_1px_rgba(255,255,255,0.1)] transition-transform duration-300 group-hover:-translate-y-2 z-10 dvd-bezel overflow-hidden">
+<div class="relative h-full w-full overflow-hidden rounded-[2px] bg-black">
+<img alt="Fog of Doubt" class="w-full h-full object-cover opacity-90" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCImFFl85xRDotYk8cfYQHAHgEwlPjRfH9jH_y6XqvwmyWVpGfCQNu7RnWAsJqScLYlVc4Dw9cVgzTazJm75q9sLGzVkW_MUpUGrCI-IFhyGsgm_z_TkBxl02mG_OaCOvBmxEPnb8Cq4dFME8938XjZn0yYG2x6WuNaJzvRXFHjvTGwUKoYjLy0LScq9afkOQPNYKP9l9s5ArN1rtai0SwgJpgw9M-SuhpRFAuIihZv4aYF9LtcvPnTXe4LkCQxV7vqR_l3RPNL5Rw"/>
+<div class="absolute inset-0 plastic-texture pointer-events-none"></div>
+<div class="absolute inset-0 dvd-sheen pointer-events-none"></div>
+<div class="absolute inset-y-0 left-0 w-[18px] dvd-spine pointer-events-none"></div>
+<div class="absolute top-2 right-4 opacity-20">
+<p class="font-label text-[7px] tracking-widest text-white uppercase">DIGITAL ARCHIVE</p>
+</div>
+<div class="absolute bottom-3 left-7 opacity-20">
+<span class="material-symbols-outlined text-[12px] text-white">movie</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1 mt-2">
+<h3 class="font-headline font-bold text-sm leading-tight text-on-surface group-hover:text-secondary-container transition-colors">FOG OF DOUBT</h3>
+<div class="flex justify-between items-center">
+<p class="font-label text-[10px] text-on-surface-variant tracking-widest uppercase">2003 • 142 MIN</p>
+<span class="text-[8px] border border-white/10 px-1 rounded text-on-surface-variant font-bold">PG-13</span>
+</div>
+</div>
+</div>
+<!-- DVD Case 4 -->
+<div class="group relative flex flex-col gap-4">
+<div class="relative w-full aspect-[2/2.8]">
+<div class="absolute right-0 top-1/2 -translate-y-1/2 w-[85%] h-[85%] rounded-full bg-stone-900 shadow-2xl border border-white/10 overflow-hidden transition-all duration-500 group-hover:translate-x-[45%] translate-x-[2%] z-0 disc-rainbow">
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-1/4 h-1/4 rounded-full bg-[#111317] border border-white/20 shadow-inner"></div>
+</div>
+</div>
+<div class="relative h-full w-full rounded-[4px] bg-[#0c0c0c] p-[3px] shadow-[15px_15px_40px_rgba(0,0,0,0.85),inset_0_1px_1px_rgba(255,255,255,0.1)] transition-transform duration-300 group-hover:-translate-y-2 z-10 dvd-bezel overflow-hidden">
+<div class="relative h-full w-full overflow-hidden rounded-[2px] bg-black">
+<img alt="Orbital Zero" class="w-full h-full object-cover opacity-90" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC05eA49sONM2gW0-aPE8RTLsLvYSzOyL1EpQltnw3WgIFYcXQTIzBqIBXmigekeuq8Wz-nZUyp67GmgiVDQkvrO_I54PwF-GRqK_8cMCh1TCtParq394iMD_xX2YFC-MeNSAbx6SPpR0SKOu55xpDMDXpLMagivrObgdH-YWMSxTueQ-EN9i4Tj6Ou1zxDa8FICIT54vwI-D4kvnr3Cex22g8uITOBZEZPmQjgeoPWzrtBmt4_TWGxYDF1w67nmJ_Oa0w58k0QXts"/>
+<div class="absolute inset-0 plastic-texture pointer-events-none"></div>
+<div class="absolute inset-0 dvd-sheen pointer-events-none"></div>
+<div class="absolute inset-y-0 left-0 w-[18px] dvd-spine pointer-events-none"></div>
+<div class="absolute top-2 right-4 opacity-20">
+<p class="font-label text-[7px] tracking-widest text-white uppercase">DIGITAL ARCHIVE</p>
+</div>
+<div class="absolute bottom-3 left-7 opacity-20">
+<span class="material-symbols-outlined text-[12px] text-white">movie</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1 mt-2">
+<h3 class="font-headline font-bold text-sm leading-tight text-on-surface group-hover:text-secondary-container transition-colors">ORBITAL ZERO</h3>
+<div class="flex justify-between items-center">
+<p class="font-label text-[10px] text-on-surface-variant tracking-widest uppercase">2004 • 115 MIN</p>
+<span class="text-[8px] border border-white/10 px-1 rounded text-on-surface-variant font-bold">G</span>
+</div>
+</div>
+</div>
+<!-- DVD Case 5 -->
+<div class="group relative flex flex-col gap-4">
+<div class="relative w-full aspect-[2/2.8]">
+<div class="absolute right-0 top-1/2 -translate-y-1/2 w-[85%] h-[85%] rounded-full bg-stone-900 shadow-2xl border border-white/10 overflow-hidden transition-all duration-500 group-hover:translate-x-[45%] translate-x-[2%] z-0 disc-rainbow">
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-1/4 h-1/4 rounded-full bg-[#111317] border border-white/20 shadow-inner"></div>
+</div>
+</div>
+<div class="relative h-full w-full rounded-[4px] bg-[#0c0c0c] p-[3px] shadow-[15px_15px_40px_rgba(0,0,0,0.85),inset_0_1px_1px_rgba(255,255,255,0.1)] transition-transform duration-300 group-hover:-translate-y-2 z-10 dvd-bezel overflow-hidden">
+<div class="relative h-full w-full overflow-hidden rounded-[2px] bg-black">
+<img alt="Whispers" class="w-full h-full object-cover opacity-90" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbAshlx4H46hbUBhT2wRStxI51emtKzIQ2S_ThDm97fM_e_NTQX3F1caBxtZ2808xTOmrrKrw7kGz4dLsA83TlSkJHpPoOmOLnkVJTF_jXrdBZBiZx2sw5g2y7P_yEc27MVDGYufzEBJSQOwXE-jpPzUO04ocALr9GUnksnsU-mQ0ZdJigJPbVml28gh6QfwGhKowvEosMi8kibV5vZQ17bD9moG_yRNxmlIm_LfVacHSRSeD_lkz43iyEhLymPQZ13EvMOmPCHiw"/>
+<div class="absolute inset-0 plastic-texture pointer-events-none"></div>
+<div class="absolute inset-0 dvd-sheen pointer-events-none"></div>
+<div class="absolute inset-y-0 left-0 w-[18px] dvd-spine pointer-events-none"></div>
+<div class="absolute top-2 right-4 opacity-20">
+<p class="font-label text-[7px] tracking-widest text-white uppercase">DIGITAL ARCHIVE</p>
+</div>
+<div class="absolute bottom-3 left-7 opacity-20">
+<span class="material-symbols-outlined text-[12px] text-white">movie</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1 mt-2">
+<h3 class="font-headline font-bold text-sm leading-tight text-on-surface group-hover:text-secondary-container transition-colors">WHISPERS IN THE WALL</h3>
+<div class="flex justify-between items-center">
+<p class="font-label text-[10px] text-on-surface-variant tracking-widest uppercase">1998 • 96 MIN</p>
+<span class="text-[8px] border border-white/10 px-1 rounded text-on-surface-variant font-bold">R</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Ledge Decoration -->
+<div class="mt-20 h-24 w-full bg-gradient-to-t from-surface-container-low to-transparent rounded-t-xl border-t border-white/5 p-8">
+<div class="flex justify-between items-center opacity-30">
+<div class="flex gap-4">
+<span class="material-symbols-outlined">movie</span>
+<span class="material-symbols-outlined">hd</span>
+<span class="material-symbols-outlined">subtitles</span>
+</div>
+<p class="font-label text-[8px] tracking-[0.4em] uppercase">Digital Rental Archive v2.4.0 • Regional Locked</p>
+</div>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center py-3 px-4 bg-[#111317] z-50 border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.9)]">
+<a class="flex flex-col items-center justify-center text-[#ffdb3c] scale-110" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span class="font-label text-[10px] uppercase font-bold mt-1">Catalog</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#e2e2e8]/40 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label text-[10px] uppercase font-bold mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#e2e2e8]/40 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="font-label text-[10px] uppercase font-bold mt-1">Favorites</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#e2e2e8]/40 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label text-[10px] uppercase font-bold mt-1">Account</span>
+</a>
+</nav>
+</body></html>

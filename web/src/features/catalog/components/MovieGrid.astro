@@ -1,0 +1,44 @@
+---
+import type { Movie } from '../types/movie.types';
+import MovieCard from './MovieCard.astro';
+
+interface Props {
+  movies: Movie[];
+}
+
+const { movies } = Astro.props;
+---
+
+<section aria-labelledby="catalog-heading">
+  <div class="flex items-end justify-between mb-8">
+    <h1
+      id="catalog-heading"
+      class="font-headline text-5xl font-black italic tracking-tighter text-on-surface uppercase"
+    >
+      Curated Catalog
+    </h1>
+    <div class="flex gap-4 font-label text-[10px] tracking-widest uppercase text-on-surface-variant">
+      <span class="px-3 py-1 bg-surface-container-high rounded border border-white/5">
+        Sort: Release Date
+      </span>
+      <span class="px-3 py-1 bg-surface-container-high rounded border border-white/5">
+        Filter: All Regions
+      </span>
+    </div>
+  </div>
+
+  <ul
+    class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-16 gap-x-12 list-none p-0 m-0"
+    data-testid="movie-grid"
+    role="list"
+    aria-label="Movie catalog"
+  >
+    {
+      movies.map((movie) => (
+        <li role="listitem">
+          <MovieCard movie={movie} />
+        </li>
+      ))
+    }
+  </ul>
+</section>

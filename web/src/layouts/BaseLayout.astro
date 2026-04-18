@@ -1,0 +1,238 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'THE ARCHIVE | Cinephile 2000',
+  description = 'A curated digital vault of cinematic classics. Browse our catalog of handpicked DVD-era films.',
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
+---
+
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <title>{title}</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;800;900&family=Space+Grotesk:wght@400;500;700&family=Work+Sans:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+
+  <body
+    class="bg-surface text-on-surface font-body selection:bg-secondary-container selection:text-on-secondary-container"
+  >
+    <!-- Top Nav -->
+    <header
+      class="w-full top-0 z-50 bg-[#111317] flex justify-between items-center px-8 py-4 shadow-2xl shadow-black"
+    >
+      <div class="flex items-center gap-8">
+        <a
+          href="/"
+          class="text-2xl font-black text-[#E50914] italic uppercase tracking-tighter font-headline"
+          aria-label="THE ARCHIVE home"
+        >
+          THE ARCHIVE
+        </a>
+        <nav class="hidden md:flex items-center gap-6" aria-label="Main navigation">
+          <a
+            class="font-headline font-bold tracking-tight text-[#ffdb3c] underline decoration-2 underline-offset-8 hover:text-[#ffdb3c] transition-colors duration-300"
+            href="/"
+          >
+            Movies
+          </a>
+          <a
+            class="font-headline font-bold tracking-tight text-[#e2e2e8] hover:text-[#ffdb3c] transition-colors duration-300"
+            href="#"
+          >
+            TV Series
+          </a>
+          <a
+            class="font-headline font-bold tracking-tight text-[#e2e2e8] hover:text-[#ffdb3c] transition-colors duration-300"
+            href="#"
+          >
+            Special Features
+          </a>
+        </nav>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <div class="relative hidden lg:block">
+          <span
+            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm"
+            aria-hidden="true"
+          >
+            search
+          </span>
+          <label for="vault-search" class="sr-only">Search the vault</label>
+          <input
+            id="vault-search"
+            class="bg-surface-container-low border-none focus:ring-1 focus:ring-primary-container text-xs font-label tracking-widest pl-10 pr-4 py-2 w-64 rounded-lg"
+            placeholder="SEARCH VAULT..."
+            type="search"
+            aria-label="Search movies"
+          />
+        </div>
+        <button
+          class="scale-95 active:opacity-80 text-[#e2e2e8] hover:text-[#ffdb3c] transition-colors duration-300"
+          aria-label="Account"
+        >
+          <span class="material-symbols-outlined text-3xl" aria-hidden="true">account_circle</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="bg-gradient-to-b from-[#333539] to-[#111317] h-1"></div>
+
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <aside
+        class="hidden md:flex h-full w-64 fixed left-0 bg-[#111317]/90 backdrop-blur-xl flex-col p-6 space-y-8 shadow-[20px_0_40px_rgba(0,0,0,0.8)] border-r border-white/5 z-40"
+        aria-label="Sidebar navigation"
+      >
+        <div class="space-y-1">
+          <p class="font-label uppercase text-xs tracking-widest text-[#ffdb3c]">Member Since '04</p>
+          <p class="font-label uppercase text-[10px] tracking-[0.2em] text-[#e2e2e8]/60">
+            Premium Tier
+          </p>
+        </div>
+
+        <nav class="flex flex-col gap-4" aria-label="Sidebar links">
+          <a
+            class="font-label uppercase text-xs tracking-widest text-[#e2e2e8]/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2 rounded"
+            href="#"
+          >
+            <span class="material-symbols-outlined text-lg" aria-hidden="true">home</span>
+            Home
+          </a>
+          <a
+            class="font-label uppercase text-xs tracking-widest text-[#ffdb3c] flex items-center gap-2 before:content-['▶'] before:text-[8px] transition-all duration-200 ease-in-out py-2 px-1"
+            href="/"
+            aria-current="page"
+          >
+            <span class="material-symbols-outlined text-lg" aria-hidden="true">fiber_new</span>
+            New Releases
+          </a>
+          <a
+            class="font-label uppercase text-xs tracking-widest text-[#e2e2e8]/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2 rounded"
+            href="#"
+          >
+            <span class="material-symbols-outlined text-lg" aria-hidden="true">category</span>
+            Genres
+          </a>
+          <a
+            class="font-label uppercase text-xs tracking-widest text-[#e2e2e8]/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2 rounded"
+            href="#"
+          >
+            <span class="material-symbols-outlined text-lg" aria-hidden="true">inventory_2</span>
+            My Shelf
+          </a>
+          <a
+            class="font-label uppercase text-xs tracking-widest text-[#e2e2e8]/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2 rounded"
+            href="#"
+          >
+            <span class="material-symbols-outlined text-lg" aria-hidden="true">settings</span>
+            Settings
+          </a>
+        </nav>
+
+        <div class="pt-8">
+          <button
+            class="w-full bg-primary-container text-on-primary-container py-3 font-label font-bold tracking-widest text-xs rounded-lg hover:shadow-[0_0_20px_rgba(229,9,20,0.4)] transition-all active:scale-95"
+          >
+            RENT NOW
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main slot -->
+      <main class="flex-1 md:ml-64 p-8 pb-24" id="main-content">
+        <slot />
+
+        <!-- Footer ledge -->
+        <div
+          class="mt-20 h-24 w-full bg-gradient-to-t from-surface-container-low to-transparent rounded-t-xl border-t border-white/5 p-8"
+          aria-hidden="true"
+        >
+          <div class="flex justify-between items-center opacity-30">
+            <div class="flex gap-4">
+              <span class="material-symbols-outlined">movie</span>
+              <span class="material-symbols-outlined">hd</span>
+              <span class="material-symbols-outlined">subtitles</span>
+            </div>
+            <p class="font-label text-[8px] tracking-[0.4em] uppercase">
+              Digital Rental Archive v2.4.0 • Regional Locked
+            </p>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Bottom nav (mobile) -->
+    <nav
+      class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center py-3 px-4 bg-[#111317] z-50 border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.9)]"
+      aria-label="Mobile navigation"
+    >
+      <a class="flex flex-col items-center justify-center text-[#ffdb3c] scale-110" href="/">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;" aria-hidden="true"
+          >grid_view</span
+        >
+        <span class="font-label text-[10px] uppercase font-bold mt-1">Catalog</span>
+      </a>
+      <button
+        class="flex flex-col items-center justify-center text-[#e2e2e8]/40 active:scale-90 transition-transform"
+        aria-label="Search"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">search</span>
+        <span class="font-label text-[10px] uppercase font-bold mt-1">Search</span>
+      </button>
+      <button
+        class="flex flex-col items-center justify-center text-[#e2e2e8]/40 active:scale-90 transition-transform"
+        aria-label="Favorites"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">favorite</span>
+        <span class="font-label text-[10px] uppercase font-bold mt-1">Favorites</span>
+      </button>
+      <button
+        class="flex flex-col items-center justify-center text-[#e2e2e8]/40 active:scale-90 transition-transform"
+        aria-label="Account"
+      >
+        <span class="material-symbols-outlined" aria-hidden="true">person</span>
+        <span class="font-label text-[10px] uppercase font-bold mt-1">Account</span>
+      </button>
+    </nav>
+  </body>
+</html>
