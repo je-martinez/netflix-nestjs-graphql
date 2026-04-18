@@ -9,7 +9,7 @@ const movies = MOCK_MOVIES;
 <!-- Movie Details Modal Backdrop -->
 <div
   id="movie-modal"
-  class="fixed inset-0 z-[100] hidden"
+  class="fixed inset-0 z-[200] hidden"
   role="dialog"
   aria-modal="true"
   aria-labelledby="modal-title"
@@ -251,65 +251,65 @@ const movies = MOCK_MOVIES;
 </div>
 
 <script>
-  const modal = document.getElementById('movie-modal')!;
-  const backdrop = document.getElementById('modal-backdrop')!;
-  const closeBtn = document.getElementById('modal-close')!;
-  const inner = document.getElementById('modal-inner')!;
+  function initModal() {
+    const modal = document.getElementById('movie-modal');
+    const backdrop = document.getElementById('modal-backdrop');
+    const closeBtn = document.getElementById('modal-close');
+    const inner = document.getElementById('modal-inner');
+    if (!modal || !backdrop || !closeBtn || !inner) return;
 
-  function openModal(movieId: string) {
-    const tmpl = inner.querySelector<HTMLTemplateElement>(
-      `template[data-movie-template="${movieId}"]`
-    );
-    if (!tmpl) return;
+    function openModal(movieId: string) {
+      const tmpl = inner!.querySelector<HTMLTemplateElement>(
+        `template[data-movie-template="${movieId}"]`
+      );
+      if (!tmpl) return;
 
-    // Clear old rendered content (keep templates)
-    const existing = inner.querySelector('[data-rendered]');
-    if (existing) existing.remove();
+      const existing = inner!.querySelector('[data-rendered]');
+      if (existing) existing.remove();
 
-    const clone = tmpl.content.cloneNode(true) as DocumentFragment;
-    const wrapper = document.createElement('div');
-    wrapper.dataset.rendered = movieId;
-    wrapper.appendChild(clone);
-    inner.appendChild(wrapper);
+      const clone = tmpl.content.cloneNode(true) as DocumentFragment;
+      const wrapper = document.createElement('div');
+      wrapper.dataset.rendered = movieId;
+      wrapper.appendChild(clone);
+      inner!.appendChild(wrapper);
 
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-
-    // Focus management
-    closeBtn.focus();
-  }
-
-  function closeModal() {
-    modal.classList.add('hidden');
-    document.body.style.overflow = '';
-
-    // Return focus to the card that opened the modal
-    const activeCard = document.querySelector<HTMLElement>(
-      `[data-movie-id="${inner.querySelector('[data-rendered]')?.dataset.rendered}"]`
-    );
-    activeCard?.focus();
-
-    const rendered = inner.querySelector('[data-rendered]');
-    if (rendered) rendered.remove();
-  }
-
-  // Card click / keyboard
-  document.addEventListener('click', (e) => {
-    const card = (e.target as Element).closest<HTMLElement>('[data-movie-id]');
-    if (card?.dataset.movieId) openModal(card.dataset.movieId);
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      const card = (document.activeElement as HTMLElement).closest<HTMLElement>('[data-movie-id]');
-      if (card?.dataset.movieId) {
-        e.preventDefault();
-        openModal(card.dataset.movieId);
-      }
+      modal!.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      closeBtn!.focus();
     }
-    if (e.key === 'Escape') closeModal();
-  });
 
-  closeBtn.addEventListener('click', closeModal);
-  backdrop.addEventListener('click', closeModal);
+    function closeModal() {
+      modal!.classList.add('hidden');
+      document.body.style.overflow = '';
+
+      const rendered = inner!.querySelector('[data-rendered]');
+      const activeCard = document.querySelector<HTMLElement>(
+        `[data-movie-id="${(rendered as HTMLElement)?.dataset.rendered}"]`
+      );
+      activeCard?.focus();
+      rendered?.remove();
+    }
+
+    document.addEventListener('click', (e) => {
+      const card = (e.target as Element).closest<HTMLElement>('[data-movie-id]');
+      if (card?.dataset.movieId) openModal(card.dataset.movieId);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const card = (document.activeElement as HTMLElement).closest<HTMLElement>('[data-movie-id]');
+        if (card?.dataset.movieId) {
+          e.preventDefault();
+          openModal(card.dataset.movieId);
+        }
+      }
+      if (e.key === 'Escape') closeModal();
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', closeModal);
+  }
+
+  // Runs on first load and after every View Transition navigation
+  document.addEventListener('astro:page-load', initModal);
 </script>

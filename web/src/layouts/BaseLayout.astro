@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title?: string;
@@ -35,6 +36,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
     <meta name="twitter:description" content={description} />
 
     <title>{title}</title>
+    <ClientRouter />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -58,6 +60,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
     <!-- Top Nav -->
     <header
       class="fixed inset-x-0 top-0 z-50 bg-brand-dark flex justify-between items-center px-8 py-4 shadow-2xl shadow-black"
+      transition:persist
     >
       <div class="flex items-center gap-8">
         <a
@@ -76,13 +79,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
           </a>
           <a
             class="font-headline font-bold tracking-tight text-brand-text hover:text-brand-yellow transition-colors duration-300"
-            href="#"
+            href="/tv-series"
           >
             TV Series
           </a>
           <a
             class="font-headline font-bold tracking-tight text-brand-text hover:text-brand-yellow transition-colors duration-300"
-            href="#"
+            href="/special-features"
           >
             Special Features
           </a>
@@ -122,6 +125,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
       <aside
         class="hidden md:flex h-full w-64 fixed left-0 bg-brand-dark flex-col p-6 space-y-8 shadow-[20px_0_40px_rgba(0,0,0,0.8)] border-r border-white/5 z-40"
         aria-label="Sidebar navigation"
+        transition:persist
       >
         <div class="space-y-1">
           <p class="font-label uppercase text-xs tracking-widest text-brand-yellow">Member Since '04</p>
@@ -179,7 +183,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
       </aside>
 
       <!-- Main slot -->
-      <main class="flex-1 md:ml-64 p-8 pb-24" id="main-content">
+      <main class="flex-1 md:ml-64 p-8 pb-24" id="main-content" transition:name="main-content" transition:animate="fade">
         <slot />
 
         <!-- Footer ledge -->
@@ -234,5 +238,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
         <span class="font-label text-[10px] uppercase font-bold mt-1">Account</span>
       </button>
     </nav>
+
+    <!-- Modal portal — outside all stacking contexts -->
+    <slot name="modal" />
   </body>
 </html>
