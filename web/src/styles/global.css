@@ -11,6 +11,11 @@ body {
 }
 
 @theme {
+  --color-brand: #E50914;
+  --color-brand-yellow: #FFD700;
+  --color-brand-dark: #111317;
+  --color-brand-text: #e2e2e8;
+
   --color-surface-container-highest: #333539;
   --color-on-secondary-container: #725f00;
   --color-primary-fixed: #ffdad5;
@@ -24,7 +29,7 @@ body {
   --color-on-surface: #e2e2e8;
   --color-on-background: #e2e2e8;
   --color-primary-container: #e50914;
-  --color-secondary-container: #ffdb3c;
+  --color-secondary-container: #FFD700;
   --color-primary-fixed-dim: #ffb4aa;
   --color-surface-dim: #111317;
   --color-secondary-fixed: #ffe16d;

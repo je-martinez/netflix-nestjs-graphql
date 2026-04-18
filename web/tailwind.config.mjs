@@ -6,8 +6,8 @@ export default {
     extend: {
       colors: {
         // Branding aliases
-        brand: '#e50914',
-        'brand-yellow': '#ffdb3c',
+        brand: '#E50914',
+        'brand-yellow': '#FFD700',
         'brand-dark': '#111317',
         'brand-text': '#e2e2e8',
 
@@ -24,7 +24,7 @@ export default {
         'on-surface': '#e2e2e8',
         'on-background': '#e2e2e8',
         'primary-container': '#e50914',
-        'secondary-container': '#ffdb3c',
+        'secondary-container': '#FFD700',
         'primary-fixed-dim': '#ffb4aa',
         'surface-dim': '#111317',
         'secondary-fixed': '#ffe16d',
