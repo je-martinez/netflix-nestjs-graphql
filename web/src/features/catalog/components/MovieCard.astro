@@ -1,5 +1,6 @@
 ---
 import type { Movie } from '../types/movie.types';
+import DvdDisc from './DvdDisc.astro';
 
 interface Props {
   movie: Movie;
@@ -21,14 +22,7 @@ const runtimeLabel = runtimeHours > 0 ? `${runtimeHours}H ${runtimeMins}MIN` : `
 >
   <div class="relative w-full aspect-[2/2.8]">
     <!-- Peeking DVD disc -->
-    <div
-      class="absolute right-0 top-1/2 -translate-y-1/2 w-[85%] h-[85%] rounded-full bg-stone-900 shadow-2xl border border-white/10 overflow-hidden transition-all duration-500 group-hover:translate-x-[45%] translate-x-[2%] z-0 disc-rainbow"
-      aria-hidden="true"
-    >
-      <div class="absolute inset-0 flex items-center justify-center">
-        <div class="w-1/4 h-1/4 rounded-full bg-brand-dark border border-white/20 shadow-inner"></div>
-      </div>
-    </div>
+    <DvdDisc posterUrl={movie.posterUrl} title={movie.title} />
 
     <!-- DVD Case -->
     <div

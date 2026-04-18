@@ -1,0 +1,47 @@
+---
+interface Props {
+  posterUrl: string;
+  title: string;
+}
+
+const { posterUrl, title } = Astro.props;
+---
+
+<!-- DVD disc with poster as face -->
+<div
+  class="absolute right-0 top-1/2 -translate-y-1/2 w-[85%] aspect-square shadow-2xl transition-all duration-500 group-hover:translate-x-[45%] translate-x-[2%] z-0 overflow-hidden"
+  style="border-radius: 9999px;"
+  aria-hidden="true"
+>
+  <!-- Poster mapped to disc face -->
+  <img
+    src={posterUrl}
+    alt=""
+    class="absolute inset-0 w-full h-full object-cover rounded-full scale-110"
+    loading="lazy"
+    decoding="async"
+  />
+
+  <!-- Iridescent rainbow overlay -->
+  <div
+    class="absolute inset-0 rounded-full"
+    style="background: conic-gradient(from 180deg at 50% 50%, rgba(255,0,0,0.35) 0deg, rgba(255,165,0,0.35) 60deg, rgba(255,255,0,0.35) 120deg, rgba(0,255,0,0.30) 180deg, rgba(0,100,255,0.35) 240deg, rgba(180,0,255,0.35) 300deg, rgba(255,0,0,0.35) 360deg); mix-blend-mode: color-dodge;"
+  ></div>
+
+  <!-- Radial gloss — simulates the data rings -->
+  <div
+    class="absolute inset-0 rounded-full"
+    style="background: radial-gradient(circle at 50% 50%, transparent 22%, rgba(255,255,255,0.06) 23%, transparent 24%, rgba(255,255,255,0.04) 38%, transparent 39%, rgba(255,255,255,0.03) 55%, transparent 56%);"
+  ></div>
+
+  <!-- Specular highlight -->
+  <div
+    class="absolute inset-0 rounded-full"
+    style="background: linear-gradient(135deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.04) 40%, transparent 60%);"
+  ></div>
+
+  <!-- Spindle hole -->
+  <div class="absolute inset-0 flex items-center justify-center">
+    <div class="w-[13%] h-[13%] rounded-full bg-brand-dark border border-white/20 shadow-inner z-10"></div>
+  </div>
+</div>
