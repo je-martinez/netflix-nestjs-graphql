@@ -1,16 +1,4 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import MovieGrid from '../features/catalog/components/MovieGrid.astro';
-import MovieModal from '../features/movie-details/components/MovieModal.astro';
-import { getMovies } from '../features/catalog/services/movies.service';
-
-const movies = await getMovies();
 ---
-
-<BaseLayout
-  title="THE ARCHIVE | Curated Catalog"
-  description="Browse our curated digital vault of cinematic classics from the DVD era. Discover handpicked films with full scene selections and bonus materials."
->
-  <MovieGrid movies={movies} />
-  <MovieModal slot="modal" />
-</BaseLayout>
+<meta http-equiv="refresh" content="0;url=/movies/home" />
+<script>window.location.replace('/movies/home');</script>

@@ -5,12 +5,32 @@ import { ClientRouter } from 'astro:transitions';
 interface Props {
   title?: string;
   description?: string;
+  section?: 'movies' | 'tv-series' | 'special-features' | 'my-shelf' | 'settings';
+  subsection?: string;
 }
 
 const {
-  title = 'THE ARCHIVE | Cinephile 2000',
+  title = 'NETFLIX',
   description = 'A curated digital vault of cinematic classics. Browse our catalog of handpicked DVD-era films.',
+  section = 'movies',
+  subsection = 'home',
 } = Astro.props;
+
+const subLinks = (base: string) => [
+  { href: `/${base}/home`,         icon: 'home',      label: 'Home' },
+  { href: `/${base}/new-releases`, icon: 'fiber_new', label: 'New Releases' },
+  { href: `/${base}/genres`,       icon: 'category',  label: 'Genres' },
+];
+
+const sidebarLinks: Record<string, { href: string; icon: string; label: string }[]> = {
+  movies:             subLinks('movies'),
+  'tv-series':        subLinks('tv-series'),
+  'special-features': subLinks('special-features'),
+};
+
+const navSection = section in sidebarLinks ? section : 'movies';
+const currentLinks = sidebarLinks[navSection];
+const currentPath  = Astro.url.pathname;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
 ---
@@ -66,26 +86,34 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
         <a
           href="/"
           class="text-2xl font-black italic uppercase tracking-tighter font-headline text-brand"
-          aria-label="THE ARCHIVE home"
+          aria-label="NETFLIX home"
         >
           NETFLIX
         </a>
-        <nav class="hidden md:flex items-center gap-6" aria-label="Main navigation">
+        <nav class="hidden md:flex items-center gap-6 relative" aria-label="Main navigation">
+          <span
+            id="nav-indicator"
+            class="absolute bottom-[-6px] h-[2px] bg-brand-yellow"
+            aria-hidden="true"
+          ></span>
           <a
-            class="font-headline font-bold tracking-tight text-brand-yellow underline decoration-2 underline-offset-8 hover:text-brand-yellow transition-colors duration-300"
-            href="/"
+            class="font-headline font-bold tracking-tight text-brand-text hover:text-brand-yellow transition-colors duration-300 pb-1"
+            data-nav-link
+            href="/movies/home"
           >
             Movies
           </a>
           <a
-            class="font-headline font-bold tracking-tight text-brand-text hover:text-brand-yellow transition-colors duration-300"
-            href="/tv-series"
+            class="font-headline font-bold tracking-tight text-brand-text hover:text-brand-yellow transition-colors duration-300 pb-1"
+            data-nav-link
+            href="/tv-series/home"
           >
             TV Series
           </a>
           <a
-            class="font-headline font-bold tracking-tight text-brand-text hover:text-brand-yellow transition-colors duration-300"
-            href="/special-features"
+            class="font-headline font-bold tracking-tight text-brand-text hover:text-brand-yellow transition-colors duration-300 pb-1"
+            data-nav-link
+            href="/special-features/home"
           >
             Special Features
           </a>
@@ -125,7 +153,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
       <aside
         class="hidden md:flex h-full w-64 fixed left-0 bg-brand-dark flex-col p-6 space-y-8 shadow-[20px_0_40px_rgba(0,0,0,0.8)] border-r border-white/5 z-40"
         aria-label="Sidebar navigation"
-        transition:persist
       >
         <div class="space-y-1">
           <p class="font-label uppercase text-xs tracking-widest text-brand-yellow">Member Since '04</p>
@@ -134,39 +161,47 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
           </p>
         </div>
 
-        <nav class="flex flex-col gap-4" aria-label="Sidebar links">
+        <nav class="flex flex-col gap-1" aria-label="Sidebar links">
+          {currentLinks.map((link) => {
+            const isActive = currentPath === link.href;
+            return (
+              <a
+                href={link.href}
+                data-sidebar-link
+                class={`font-label uppercase text-xs tracking-widest flex items-center gap-2 transition-all duration-200 ease-in-out py-2 px-1 ${
+                  isActive
+                    ? 'text-brand-yellow before:content-["▶"] before:text-[8px]'
+                    : 'text-brand-text/60 hover:bg-white/5 hover:text-white rounded'
+                }`}
+              >
+                <span class="material-symbols-outlined text-lg" aria-hidden="true">{link.icon}</span>
+                {link.label}
+              </a>
+            );
+          })}
+
+          <div class="my-4 border-t border-white/5"></div>
+
           <a
-            class="font-label uppercase text-xs tracking-widest text-brand-text/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2 rounded"
-            href="#"
-          >
-            <span class="material-symbols-outlined text-lg" aria-hidden="true">home</span>
-            Home
-          </a>
-          <a
-            class="font-label uppercase text-xs tracking-widest text-brand-yellow flex items-center gap-2 before:content-['▶'] before:text-[8px] transition-all duration-200 ease-in-out py-2 px-1"
-            href="/"
-            aria-current="page"
-          >
-            <span class="material-symbols-outlined text-lg" aria-hidden="true">fiber_new</span>
-            New Releases
-          </a>
-          <a
-            class="font-label uppercase text-xs tracking-widest text-brand-text/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2 rounded"
-            href="#"
-          >
-            <span class="material-symbols-outlined text-lg" aria-hidden="true">category</span>
-            Genres
-          </a>
-          <a
-            class="font-label uppercase text-xs tracking-widest text-brand-text/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2 rounded"
-            href="#"
+            href="/my-shelf"
+            data-sidebar-link
+            class={`font-label uppercase text-xs tracking-widest flex items-center gap-2 transition-all duration-200 ease-in-out py-2 px-1 ${
+              section === 'my-shelf'
+                ? 'text-brand-yellow before:content-["▶"] before:text-[8px]'
+                : 'text-brand-text/60 hover:bg-white/5 hover:text-white rounded'
+            }`}
           >
             <span class="material-symbols-outlined text-lg" aria-hidden="true">inventory_2</span>
             My Shelf
           </a>
           <a
-            class="font-label uppercase text-xs tracking-widest text-brand-text/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2 rounded"
-            href="#"
+            href="/settings"
+            data-sidebar-link
+            class={`font-label uppercase text-xs tracking-widest flex items-center gap-2 transition-all duration-200 ease-in-out py-2 px-1 ${
+              section === 'settings'
+                ? 'text-brand-yellow before:content-["▶"] before:text-[8px]'
+                : 'text-brand-text/60 hover:bg-white/5 hover:text-white rounded'
+            }`}
           >
             <span class="material-symbols-outlined text-lg" aria-hidden="true">settings</span>
             Settings
@@ -183,7 +218,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
       </aside>
 
       <!-- Main slot -->
-      <main class="flex-1 md:ml-64 p-8 pb-24" id="main-content" transition:name="main-content" transition:animate="fade">
+      <main class="flex-1 md:ml-64 p-8 pb-24" id="main-content">
         <slot />
 
         <!-- Footer ledge -->
@@ -241,5 +276,96 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
 
     <!-- Modal portal — outside all stacking contexts -->
     <slot name="modal" />
+
+    <script>
+      import { gsap } from 'gsap';
+
+      const ROUTES = ['/movies', '/tv-series', '/special-features'];
+      let slideDirection = 1;
+
+      function updateActiveLinks(pathname: string, animate = true) {
+        const indicator = document.getElementById('nav-indicator');
+        const nav = indicator?.parentElement;
+        const section = '/' + pathname.split('/')[1];
+
+        document.querySelectorAll<HTMLAnchorElement>('[data-nav-link]').forEach((a) => {
+          const isActive = '/' + a.pathname.split('/')[1] === section;
+          a.classList.toggle('text-brand-yellow', isActive);
+          a.classList.toggle('text-brand-text', !isActive);
+
+          if (isActive && indicator && nav) {
+            const navRect = nav.getBoundingClientRect();
+            const aRect = a.getBoundingClientRect();
+            if (animate) {
+              gsap.to(indicator, { left: aRect.left - navRect.left, width: aRect.width, duration: 0.35, ease: 'power2.inOut' });
+            } else {
+              gsap.set(indicator, { left: aRect.left - navRect.left, width: aRect.width });
+            }
+          }
+        });
+
+        document.querySelectorAll<HTMLAnchorElement>('[data-sidebar-link]').forEach((a) => {
+          const isActive = a.pathname === pathname;
+          a.classList.toggle('text-brand-yellow', isActive);
+          a.classList.toggle('before:content-["▶"]', isActive);
+          a.classList.toggle('before:text-[8px]', isActive);
+          a.classList.toggle('text-brand-text/60', !isActive);
+          a.classList.toggle('hover:bg-white/5', !isActive);
+          a.classList.toggle('hover:text-white', !isActive);
+          a.classList.toggle('rounded', !isActive);
+        });
+      }
+
+      let firstLoad = true;
+
+      function pageEnter() {
+        updateActiveLinks(window.location.pathname, !firstLoad);
+        firstLoad = false;
+        const main = document.getElementById('main-content');
+        if (!main) return;
+        gsap.fromTo(main, { opacity: 0 }, {
+          opacity: 1,
+          duration: 0.5,
+          ease: 'power2.out',
+          onComplete: () => { main.removeAttribute('style'); },
+        });
+      }
+
+      // Intercept header nav clicks to preserve subsection across sections
+      document.addEventListener('click', (e) => {
+        const link = (e.target as Element).closest<HTMLAnchorElement>('[data-nav-link]');
+        if (!link) return;
+
+        e.preventDefault();
+        const targetSection = link.pathname.split('/')[1]; // e.g. "movies"
+        const currentSubsection = window.location.pathname.split('/')[2] ?? 'home'; // e.g. "new-releases"
+        const dest = `/${targetSection}/${currentSubsection}`;
+
+        if (dest !== window.location.pathname) {
+          window.location.href = dest;
+        }
+      });
+
+      document.addEventListener('astro:page-load', pageEnter);
+
+      document.addEventListener('astro:before-preparation', (e: Event) => {
+        const nav = e as { to?: URL; cancel: () => void };
+        const to = nav.to?.pathname ?? '/';
+
+        if (to === window.location.pathname) {
+          nav.cancel();
+          return;
+        }
+
+        const fromSection = '/' + window.location.pathname.split('/')[1];
+        const toSection   = '/' + to.split('/')[1];
+        const fromIndex = ROUTES.indexOf(fromSection);
+        const toIndex   = ROUTES.indexOf(toSection);
+        slideDirection = toIndex >= fromIndex ? 1 : -1;
+
+        const main = document.getElementById('main-content');
+        if (main) gsap.to(main, { opacity: 0, duration: 0.3, ease: 'power2.in' });
+      });
+    </script>
   </body>
 </html>

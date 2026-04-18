@@ -251,12 +251,15 @@ const movies = MOCK_MOVIES;
 </div>
 
 <script>
+  import { gsap } from 'gsap';
+
   function initModal() {
     const modal = document.getElementById('movie-modal');
     const backdrop = document.getElementById('modal-backdrop');
     const closeBtn = document.getElementById('modal-close');
     const inner = document.getElementById('modal-inner');
-    if (!modal || !backdrop || !closeBtn || !inner) return;
+    const panel = document.getElementById('modal-content');
+    if (!modal || !backdrop || !closeBtn || !inner || !panel) return;
 
     function openModal(movieId: string) {
       const tmpl = inner!.querySelector<HTMLTemplateElement>(
@@ -275,19 +278,35 @@ const movies = MOCK_MOVIES;
 
       modal!.classList.remove('hidden');
       document.body.style.overflow = 'hidden';
+
+      gsap.fromTo(backdrop!, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+      gsap.fromTo(
+        panel!,
+        { opacity: 0, y: 48, scale: 0.97 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: 'power3.out', delay: 0.05 }
+      );
+
       closeBtn!.focus();
     }
 
     function closeModal() {
-      modal!.classList.add('hidden');
-      document.body.style.overflow = '';
-
       const rendered = inner!.querySelector('[data-rendered]');
       const activeCard = document.querySelector<HTMLElement>(
         `[data-movie-id="${(rendered as HTMLElement)?.dataset.rendered}"]`
       );
-      activeCard?.focus();
-      rendered?.remove();
+
+      gsap.to(panel!, { opacity: 0, y: 32, scale: 0.97, duration: 0.25, ease: 'power2.in' });
+      gsap.to(backdrop!, {
+        opacity: 0,
+        duration: 0.25,
+        ease: 'power2.in',
+        onComplete: () => {
+          modal!.classList.add('hidden');
+          document.body.style.overflow = '';
+          rendered?.remove();
+          activeCard?.focus();
+        },
+      });
     }
 
     document.addEventListener('click', (e) => {
@@ -310,6 +329,5 @@ const movies = MOCK_MOVIES;
     backdrop.addEventListener('click', closeModal);
   }
 
-  // Runs on first load and after every View Transition navigation
   document.addEventListener('astro:page-load', initModal);
 </script>

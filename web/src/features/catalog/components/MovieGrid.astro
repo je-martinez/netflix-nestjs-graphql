@@ -4,9 +4,10 @@ import MovieCard from './MovieCard.astro';
 
 interface Props {
   movies: Movie[];
+  heading: string;
 }
 
-const { movies } = Astro.props;
+const { movies, heading } = Astro.props;
 ---
 
 <section aria-labelledby="catalog-heading">
@@ -15,7 +16,7 @@ const { movies } = Astro.props;
       id="catalog-heading"
       class="font-headline text-5xl font-black italic tracking-tighter text-on-surface uppercase"
     >
-      Curated Catalog
+      {heading}
     </h1>
     <div class="flex gap-4 font-label text-[10px] tracking-widest uppercase text-on-surface-variant">
       <span class="px-3 py-1 bg-surface-container-high rounded border border-white/5">
