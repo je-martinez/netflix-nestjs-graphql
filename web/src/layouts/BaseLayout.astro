@@ -218,7 +218,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
       </aside>
 
       <!-- Main slot -->
-      <main class="flex-1 md:ml-64 p-8 pb-24" id="main-content">
+      <main class="flex-1 md:ml-64 p-8 pb-24" id="main-content" transition:name="route-shell">
         <slot />
 
         <!-- Footer ledge -->
@@ -320,15 +320,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
 
       function pageEnter() {
         updateActiveLinks(window.location.pathname, !firstLoad);
+        document.body.dataset.routeDirection = String(slideDirection);
         firstLoad = false;
-        const main = document.getElementById('main-content');
-        if (!main) return;
-        gsap.fromTo(main, { opacity: 0 }, {
-          opacity: 1,
-          duration: 0.5,
-          ease: 'power2.out',
-          onComplete: () => { main.removeAttribute('style'); },
-        });
       }
 
       // Intercept header nav clicks to preserve subsection across sections
@@ -362,9 +355,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
         const fromIndex = ROUTES.indexOf(fromSection);
         const toIndex   = ROUTES.indexOf(toSection);
         slideDirection = toIndex >= fromIndex ? 1 : -1;
-
-        const main = document.getElementById('main-content');
-        if (main) gsap.to(main, { opacity: 0, duration: 0.3, ease: 'power2.in' });
+        document.body.dataset.routeDirection = String(slideDirection);
       });
     </script>
   </body>

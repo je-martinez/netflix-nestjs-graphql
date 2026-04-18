@@ -15,6 +15,49 @@ html {
   animation: none;
 }
 
+::view-transition-old(route-shell),
+::view-transition-new(route-shell) {
+  animation-duration: 460ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  mix-blend-mode: normal;
+}
+
+body[data-route-direction="1"]::view-transition-old(route-shell) {
+  animation-name: route-fade-out-left;
+}
+
+body[data-route-direction="1"]::view-transition-new(route-shell) {
+  animation-name: route-fade-in-right;
+}
+
+body[data-route-direction="-1"]::view-transition-old(route-shell) {
+  animation-name: route-fade-out-right;
+}
+
+body[data-route-direction="-1"]::view-transition-new(route-shell) {
+  animation-name: route-fade-in-left;
+}
+
+@keyframes route-fade-out-left {
+  from { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: brightness(1); }
+  to   { opacity: 0; transform: translate3d(-40px, 0, 0) scale(0.985); filter: brightness(0.65); }
+}
+
+@keyframes route-fade-in-right {
+  from { opacity: 0; transform: translate3d(56px, 0, 0) scale(1.01); filter: brightness(0.55); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: brightness(1); }
+}
+
+@keyframes route-fade-out-right {
+  from { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: brightness(1); }
+  to   { opacity: 0; transform: translate3d(40px, 0, 0) scale(0.985); filter: brightness(0.65); }
+}
+
+@keyframes route-fade-in-left {
+  from { opacity: 0; transform: translate3d(-56px, 0, 0) scale(1.01); filter: brightness(0.55); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: brightness(1); }
+}
+
 body {
   min-height: 100vh;
 }
