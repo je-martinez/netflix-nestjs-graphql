@@ -14,14 +14,14 @@ nvm use   # reads .nvmrc automatically
 
 ```bash
 # Development
-npm run dev           # Dev server → http://localhost:4321
+pnpm dev           # Dev server → http://localhost:4321
 
 # Build & Preview
-npm run build         # Static build → dist/
-npm run preview       # Preview the build (port 4321)
+pnpm build         # Static build → dist/
+pnpm preview       # Preview the build (port 4321)
 
 # Testing
-npm test              # Vitest (15 tests, run mode)
+pnpm test              # Vitest (15 tests, run mode)
 npm run test:watch    # Vitest in watch mode
 npm run test:coverage # Coverage report → coverage/
 
@@ -32,7 +32,7 @@ npm run lighthouse    # Unlighthouse against http://localhost:4321
 ## Architecture
 
 **Stack:** Astro 6 (SSG) + Tailwind CSS v4 + Vitest + Unlighthouse  
-**Node:** 24 · **Package manager:** npm
+**Node:** 24 · **Package manager:** pnpm
 
 ### Feature structure
 
