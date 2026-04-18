@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+html,
+body {
+  overscroll-behavior-y: none;
+  scrollbar-gutter: stable;
+}
+
+body {
+  min-height: 100vh;
+}
+
 @theme {
   --color-surface-container-highest: #333539;
   --color-on-secondary-container: #725f00;
@@ -111,7 +121,7 @@
 }
 
 .remote-glow:hover {
-  box-shadow: 0 0 20px rgba(229, 9, 20, 0.6);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--color-primary-container) 60%, transparent);
 }
 
 .material-symbols-outlined {

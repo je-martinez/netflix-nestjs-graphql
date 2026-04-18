@@ -5,6 +5,12 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Branding aliases
+        brand: '#e50914',
+        'brand-yellow': '#ffdb3c',
+        'brand-dark': '#111317',
+        'brand-text': '#e2e2e8',
+
         'surface-container-highest': '#333539',
         'on-secondary-container': '#725f00',
         'primary-fixed': '#ffdad5',

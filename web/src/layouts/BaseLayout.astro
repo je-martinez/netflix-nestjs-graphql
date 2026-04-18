@@ -57,31 +57,31 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
   >
     <!-- Top Nav -->
     <header
-      class="w-full top-0 z-50 bg-[#111317] flex justify-between items-center px-8 py-4 shadow-2xl shadow-black"
+      class="fixed inset-x-0 top-0 z-50 bg-brand-dark flex justify-between items-center px-8 py-4 shadow-2xl shadow-black"
     >
       <div class="flex items-center gap-8">
         <a
           href="/"
-          class="text-2xl font-black text-[#E50914] italic uppercase tracking-tighter font-headline"
+          class="text-2xl font-black text-brand italic uppercase tracking-tighter font-headline"
           aria-label="THE ARCHIVE home"
         >
           THE ARCHIVE
         </a>
         <nav class="hidden md:flex items-center gap-6" aria-label="Main navigation">
           <a
-            class="font-headline font-bold tracking-tight text-[#ffdb3c] underline decoration-2 underline-offset-8 hover:text-[#ffdb3c] transition-colors duration-300"
+            class="font-headline font-bold tracking-tight text-brand-yellow underline decoration-2 underline-offset-8 hover:text-brand-yellow transition-colors duration-300"
             href="/"
           >
             Movies
           </a>
           <a
-            class="font-headline font-bold tracking-tight text-[#e2e2e8] hover:text-[#ffdb3c] transition-colors duration-300"
+            class="font-headline font-bold tracking-tight text-brand-text hover:text-brand-yellow transition-colors duration-300"
             href="#"
           >
             TV Series
           </a>
           <a
-            class="font-headline font-bold tracking-tight text-[#e2e2e8] hover:text-[#ffdb3c] transition-colors duration-300"
+            class="font-headline font-bold tracking-tight text-brand-text hover:text-brand-yellow transition-colors duration-300"
             href="#"
           >
             Special Features
@@ -107,7 +107,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
           />
         </div>
         <button
-          class="scale-95 active:opacity-80 text-[#e2e2e8] hover:text-[#ffdb3c] transition-colors duration-300"
+          class="scale-95 active:opacity-80 text-brand-text hover:text-brand-yellow transition-colors duration-300"
           aria-label="Account"
         >
           <span class="material-symbols-outlined text-3xl" aria-hidden="true">account_circle</span>
@@ -115,31 +115,31 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
       </div>
     </header>
 
-    <div class="bg-gradient-to-b from-[#333539] to-[#111317] h-1"></div>
+    <div class="mt-[73px] bg-gradient-to-b from-surface-container-highest to-brand-dark h-1"></div>
 
     <div class="flex min-h-screen">
       <!-- Sidebar -->
       <aside
-        class="hidden md:flex h-full w-64 fixed left-0 bg-[#111317]/90 backdrop-blur-xl flex-col p-6 space-y-8 shadow-[20px_0_40px_rgba(0,0,0,0.8)] border-r border-white/5 z-40"
+        class="hidden md:flex h-full w-64 fixed left-0 bg-brand-dark/90 backdrop-blur-xl flex-col p-6 space-y-8 shadow-[20px_0_40px_rgba(0,0,0,0.8)] border-r border-white/5 z-40"
         aria-label="Sidebar navigation"
       >
         <div class="space-y-1">
-          <p class="font-label uppercase text-xs tracking-widest text-[#ffdb3c]">Member Since '04</p>
-          <p class="font-label uppercase text-[10px] tracking-[0.2em] text-[#e2e2e8]/60">
+          <p class="font-label uppercase text-xs tracking-widest text-brand-yellow">Member Since '04</p>
+          <p class="font-label uppercase text-[10px] tracking-[0.2em] text-brand-text/60">
             Premium Tier
           </p>
         </div>
 
         <nav class="flex flex-col gap-4" aria-label="Sidebar links">
           <a
-            class="font-label uppercase text-xs tracking-widest text-[#e2e2e8]/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2 rounded"
+            class="font-label uppercase text-xs tracking-widest text-brand-text/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2 rounded"
             href="#"
           >
             <span class="material-symbols-outlined text-lg" aria-hidden="true">home</span>
             Home
           </a>
           <a
-            class="font-label uppercase text-xs tracking-widest text-[#ffdb3c] flex items-center gap-2 before:content-['▶'] before:text-[8px] transition-all duration-200 ease-in-out py-2 px-1"
+            class="font-label uppercase text-xs tracking-widest text-brand-yellow flex items-center gap-2 before:content-['▶'] before:text-[8px] transition-all duration-200 ease-in-out py-2 px-1"
             href="/"
             aria-current="page"
           >
@@ -147,21 +147,21 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
             New Releases
           </a>
           <a
-            class="font-label uppercase text-xs tracking-widest text-[#e2e2e8]/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2 rounded"
+            class="font-label uppercase text-xs tracking-widest text-brand-text/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2 rounded"
             href="#"
           >
             <span class="material-symbols-outlined text-lg" aria-hidden="true">category</span>
             Genres
           </a>
           <a
-            class="font-label uppercase text-xs tracking-widest text-[#e2e2e8]/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2 rounded"
+            class="font-label uppercase text-xs tracking-widest text-brand-text/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2 rounded"
             href="#"
           >
             <span class="material-symbols-outlined text-lg" aria-hidden="true">inventory_2</span>
             My Shelf
           </a>
           <a
-            class="font-label uppercase text-xs tracking-widest text-[#e2e2e8]/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2 rounded"
+            class="font-label uppercase text-xs tracking-widest text-brand-text/60 hover:bg-white/5 hover:text-white transition-all duration-200 ease-in-out py-2 px-1 flex items-center gap-2 rounded"
             href="#"
           >
             <span class="material-symbols-outlined text-lg" aria-hidden="true">settings</span>
@@ -203,31 +203,31 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin)
 
     <!-- Bottom nav (mobile) -->
     <nav
-      class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center py-3 px-4 bg-[#111317] z-50 border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.9)]"
+      class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center py-3 px-4 bg-brand-dark z-50 border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.9)]"
       aria-label="Mobile navigation"
     >
-      <a class="flex flex-col items-center justify-center text-[#ffdb3c] scale-110" href="/">
+      <a class="flex flex-col items-center justify-center text-brand-yellow scale-110" href="/">
         <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;" aria-hidden="true"
           >grid_view</span
         >
         <span class="font-label text-[10px] uppercase font-bold mt-1">Catalog</span>
       </a>
       <button
-        class="flex flex-col items-center justify-center text-[#e2e2e8]/40 active:scale-90 transition-transform"
+        class="flex flex-col items-center justify-center text-brand-text/40 active:scale-90 transition-transform"
         aria-label="Search"
       >
         <span class="material-symbols-outlined" aria-hidden="true">search</span>
         <span class="font-label text-[10px] uppercase font-bold mt-1">Search</span>
       </button>
       <button
-        class="flex flex-col items-center justify-center text-[#e2e2e8]/40 active:scale-90 transition-transform"
+        class="flex flex-col items-center justify-center text-brand-text/40 active:scale-90 transition-transform"
         aria-label="Favorites"
       >
         <span class="material-symbols-outlined" aria-hidden="true">favorite</span>
         <span class="font-label text-[10px] uppercase font-bold mt-1">Favorites</span>
       </button>
       <button
-        class="flex flex-col items-center justify-center text-[#e2e2e8]/40 active:scale-90 transition-transform"
+        class="flex flex-col items-center justify-center text-brand-text/40 active:scale-90 transition-transform"
         aria-label="Account"
       >
         <span class="material-symbols-outlined" aria-hidden="true">person</span>
